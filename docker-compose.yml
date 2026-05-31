@@ -17,7 +17,7 @@ services:
     container_name: timeline-site
     restart: unless-stopped
     ports:
-      - "8090:80"
+      - "8095:80"
     volumes:
       # Mount the repo root as the web root (read-only)
       - ./:/usr/share/nginx/html:ro
