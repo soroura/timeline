@@ -1,9 +1,9 @@
 /* Injects shared top navigation into every page.
-   Each page sets <body data-nav="home|master|bec|tot|micro|closing|calendar|day">.
-   Program-named labels (showcase). Combined view kept for planning context. */
+   data-nav keys: home | concept | bec | tot | micro | closing | calendar | day | master */
 (function(){
   const items = [
     { key:'home',     href:'index.html',     label:'Home' },
+    { key:'concept',  href:'concept.html',   label:'The Idea' },
     { key:'bec',      href:'layer-1.html',   label:'BEC Foundation' },
     { key:'tot',      href:'layer-2.html',   label:'Process & Disaster TOT' },
     { key:'micro',    href:'layer-3.html',   label:'Hospital Microlearning' },

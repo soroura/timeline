@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Idea — EC + DP Timeline 2026</title>
+<link rel="stylesheet" href="assets/shared.css">
+<style>
+  /* ===== Hero ===== */
+  .hero {
+    background: var(--charcoal);
+    color: var(--white);
+    padding: 96px 32px 110px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
+    background: var(--terra);
+  }
+  .hero::after {
+    /* decorative giant numeral */
+    content: '';
+    position: absolute; right: -40px; top: -20px; bottom: -20px;
+    width: 380px;
+    background: radial-gradient(circle at center, rgba(199,91,60,0.12), transparent 70%);
+  }
+  .hero-inner { max-width: 1080px; margin: 0 auto; position: relative; }
+  .hero .label {
+    font-size: 10px; font-weight: 700; letter-spacing: 2.4px;
+    text-transform: uppercase; color: var(--terra);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero .label::before { content: ''; width: 36px; height: 2px; background: var(--terra); }
+  .hero h1 {
+    font-family: Georgia, serif;
+    font-size: 84px; font-weight: 700; line-height: 1.02;
+    color: var(--white); margin: 0 0 4px;
+    letter-spacing: -1.5px;
+  }
+  .hero h1 .stop { color: var(--terra); }
+  .hero .deck {
+    margin-top: 28px;
+    font-family: Georgia, serif; font-style: italic;
+    font-size: 22px; color: #C8C2B5; max-width: 720px;
+    line-height: 1.45;
+  }
+  .hero .meta {
+    margin-top: 36px; display: flex; gap: 12px; flex-wrap: wrap;
+    font-size: 11px; color: var(--grey-soft);
+    letter-spacing: 0.8px; text-transform: uppercase;
+  }
+  .hero .meta .dot { color: var(--terra); }
+
+  /* ===== Section base ===== */
+  section.layer {
+    max-width: 1080px; margin: 0 auto;
+    padding: 80px 32px;
+  }
+  section.layer .eyebrow {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--terra); margin: 0 0 12px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  section.layer .eyebrow::before {
+    content: ''; width: 32px; height: 2px; background: var(--terra);
+  }
+  section.layer h2 {
+    font-family: Georgia, serif;
+    font-size: 40px; font-weight: 700;
+    color: var(--charcoal); line-height: 1.1;
+    margin: 0 0 14px;
+    letter-spacing: -0.6px;
+  }
+  section.layer .deck {
+    font-family: Georgia, serif; font-style: italic;
+    font-size: 18px; color: var(--grey);
+    max-width: 760px; margin: 0 0 36px;
+  }
+  section.layer p.body {
+    font-size: 15px; line-height: 1.7;
+    color: var(--ink); max-width: 720px;
+    margin: 0 0 16px;
+  }
+  section.layer.alt { background: var(--bg-alt); max-width: none; }
+  section.layer.alt > .inner {
+    max-width: 1080px; margin: 0 auto;
+  }
+  section.layer.dark { background: var(--charcoal); color: var(--white); max-width: none; }
+  section.layer.dark > .inner { max-width: 1080px; margin: 0 auto; }
+  section.layer.dark h2 { color: var(--white); }
+  section.layer.dark .deck { color: #C8C2B5; }
+  section.layer.dark p.body { color: rgba(255,255,255,0.86); }
+  section.layer.dark .eyebrow { color: var(--terra); }
+
+  /* ===== Two-program grid ===== */
+  .progs {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .prog {
+    background: var(--bg-card); border: 1px solid var(--hairline);
+    padding: 32px 30px;
+    position: relative; overflow: hidden;
+  }
+  .prog::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  }
+  .prog.ec::before { background: var(--terra-d); }
+  .prog.dp::before { background: var(--purple); }
+  .prog .pp {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+  .prog.ec .pp { color: var(--terra-d); }
+  .prog.dp .pp { color: var(--purple); }
+  .prog h3 {
+    font-family: Georgia, serif;
+    font-size: 28px; font-weight: 700;
+    color: var(--charcoal); margin: 10px 0 10px;
+    line-height: 1.15;
+  }
+  .prog p.descr {
+    color: var(--grey); font-size: 14px; line-height: 1.55;
+    margin: 0 0 20px;
+  }
+  .prog ul {
+    margin: 0; padding: 0; list-style: none;
+    border-top: 1px dashed var(--hairline-soft);
+  }
+  .prog ul li {
+    padding: 10px 0; border-bottom: 1px dashed var(--hairline-soft);
+    display: flex; gap: 12px;
+    font-size: 13px;
+  }
+  .prog ul li::before {
+    content: '—'; color: var(--terra-d); font-weight: 700; flex-shrink: 0;
+  }
+  .prog.dp ul li::before { color: var(--purple); }
+
+  /* ===== Four components diagram ===== */
+  .pillars {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 20px; margin-top: 32px;
+  }
+  .pillar {
+    background: var(--bg-card); border: 1px solid var(--hairline);
+    padding: 28px 22px;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+  .pillar::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--terra);
+  }
+  .pillar .num {
+    font-family: Georgia, serif;
+    font-size: 36px; font-weight: 700;
+    color: var(--terra); line-height: 1;
+    margin-bottom: 10px;
+  }
+  .pillar .role {
+    font-size: 9.5px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--grey); margin-bottom: 8px;
+  }
+  .pillar h3 {
+    font-family: Georgia, serif;
+    font-size: 19px; color: var(--charcoal);
+    margin: 0 0 10px; font-weight: 700; line-height: 1.2;
+  }
+  .pillar p {
+    color: var(--grey); font-size: 13px; margin: 0 0 16px; flex: 1;
+    line-height: 1.5;
+  }
+  .pillar .rhythm {
+    border-top: 1px dashed var(--hairline-soft);
+    padding-top: 10px; font-size: 11px;
+    color: var(--charcoal); font-weight: 700;
+  }
+  .pillar .rhythm .l {
+    display: block; font-size: 9px;
+    color: var(--grey); font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  /* per-pillar accent */
+  .pillar.p1::before { background: var(--terra-d); }
+  .pillar.p1 .num { color: var(--terra-d); }
+  .pillar.p2::before { background: var(--blue); }
+  .pillar.p2 .num { color: var(--blue); }
+  .pillar.p3::before { background: var(--purple); }
+  .pillar.p3 .num { color: var(--purple); }
+  .pillar.p4::before { background: var(--forest); }
+  .pillar.p4 .num { color: var(--forest); }
+
+  /* ===== Principles list ===== */
+  .principles {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 22px 40px; margin-top: 24px;
+  }
+  .principle {
+    display: grid; grid-template-columns: 60px 1fr;
+    gap: 18px;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--hairline-soft);
+  }
+  .principle .pnum {
+    font-family: Georgia, serif;
+    font-size: 30px; font-weight: 700;
+    color: var(--terra); line-height: 1;
+  }
+  .principle h4 {
+    font-family: Georgia, serif;
+    font-size: 17px; color: var(--charcoal);
+    margin: 0 0 5px; font-weight: 700;
+  }
+  .principle p {
+    color: var(--grey); font-size: 13px; margin: 0;
+    line-height: 1.55;
+  }
+  section.layer.dark .principle h4 { color: var(--white); }
+  section.layer.dark .principle p { color: rgba(255,255,255,0.78); }
+  section.layer.dark .principle { border-bottom-color: rgba(255,255,255,0.12); }
+
+  /* ===== Rhythm visualization ===== */
+  .rhythm-chart {
+    background: var(--bg-card); border: 1px solid var(--hairline);
+    padding: 28px 28px;
+    margin-top: 24px;
+  }
+  .rhythm-chart .scale {
+    display: grid; grid-template-columns: 110px repeat(8, 1fr);
+    gap: 4px;
+    font-size: 10px; color: var(--grey);
+    font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+    padding-bottom: 10px; margin-bottom: 10px;
+    border-bottom: 1px solid var(--hairline-soft);
+  }
+  .rhythm-chart .scale .lbl { color: transparent; }
+  .rhythm-chart .row {
+    display: grid; grid-template-columns: 110px repeat(8, 1fr);
+    gap: 4px; align-items: center;
+    margin-bottom: 6px;
+  }
+  .rhythm-chart .row .lbl {
+    font-size: 10.5px; font-weight: 700;
+    color: var(--charcoal);
+    letter-spacing: 0.3px;
+  }
+  .rhythm-chart .row .lbl .sub {
+    display: block; font-size: 9px;
+    color: var(--grey); font-weight: 400;
+    margin-top: 2px;
+  }
+  .rhythm-chart .cell {
+    height: 26px; background: var(--bg-alt);
+    border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9.5px; font-weight: 700;
+    color: var(--white);
+  }
+  .rhythm-chart .cell.bec4 { background: var(--terra-d); }
+  .rhythm-chart .cell.bec2 { background: var(--mustard); }
+  .rhythm-chart .cell.tot  { background: var(--forest); }
+  .rhythm-chart .cell.proc { background: var(--blue); }
+  .rhythm-chart .cell.dis  { background: var(--purple); }
+  .rhythm-chart .cell.ml   { background: var(--ml-purple); }
+  .rhythm-chart .cell.drill { background: var(--red); }
+  .rhythm-chart .cell.empty { background: transparent; }
+
+  /* ===== Outcomes ===== */
+  .outcomes {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 20px; margin-top: 28px;
+  }
+  .outcome {
+    border-left: 3px solid var(--terra);
+    padding: 18px 22px;
+    background: var(--bg-card);
+    border-top: 1px solid var(--hairline);
+    border-right: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .outcome .o-num {
+    font-family: Georgia, serif;
+    font-size: 38px; font-weight: 700;
+    color: var(--charcoal); line-height: 1;
+    margin-bottom: 6px;
+  }
+  .outcome .o-lbl {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.3px;
+    text-transform: uppercase; color: var(--grey);
+    margin-bottom: 10px;
+  }
+  .outcome p {
+    font-size: 13px; color: var(--ink); margin: 0;
+    line-height: 1.55;
+  }
+
+  /* ===== Closing CTA ===== */
+  .cta {
+    background: var(--bg-alt); border: 1px solid var(--hairline);
+    padding: 44px 36px;
+    margin-top: 16px;
+    display: flex; gap: 26px; align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .cta h3 {
+    font-family: Georgia, serif;
+    font-size: 26px; color: var(--charcoal);
+    margin: 0 0 6px; font-weight: 700;
+  }
+  .cta p {
+    color: var(--grey); font-size: 14px;
+    margin: 0; max-width: 540px;
+  }
+  .cta-actions { display: flex; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
+  .cta-btn {
+    display: inline-block;
+    background: var(--charcoal); color: var(--white);
+    padding: 13px 22px; text-decoration: none;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 1.2px; text-transform: uppercase;
+  }
+  .cta-btn:hover { background: var(--terra-d); text-decoration: none; }
+  .cta-btn.ghost {
+    background: transparent; color: var(--charcoal);
+    border: 1px solid var(--charcoal);
+  }
+  .cta-btn.ghost:hover { background: var(--charcoal); color: var(--white); }
+
+  /* mobile fallback */
+  @media (max-width: 800px) {
+    .hero h1 { font-size: 56px; }
+    .progs, .pillars, .outcomes, .principles { grid-template-columns: 1fr; }
+    .rhythm-chart .scale, .rhythm-chart .row { grid-template-columns: 90px repeat(8, 1fr); }
+  }
+</style>
+</head>
+<body data-nav="concept">
+
+  <!-- ============================================ -->
+  <!-- HERO -->
+  <!-- ============================================ -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="label">The Idea · Concept paper</div>
+      <h1>One program,<br>two missions,<br>four moving parts<span class="stop">.</span></h1>
+      <p class="deck">A single capacity-building rhythm that scales Emergency Care and Disaster Preparedness together, without one stealing oxygen from the other.</p>
+      <div class="meta">
+        <span>WHO Country Office Egypt</span><span class="dot">·</span>
+        <span>2026 Concept</span><span class="dot">·</span>
+        <span>Editorial draft v1</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================ -->
+  <!-- PREMISE -->
+  <!-- ============================================ -->
+  <section class="layer">
+    <div class="eyebrow">The premise</div>
+    <h2>Capacity isn't built by training once — it's built by a rhythm.</h2>
+    <p class="deck">Standalone trainings produce graduates. They don't produce capacity. Capacity emerges when foundation, reinforcement, hospital-level practice, and recognition all run together — across enough cycles for skills to take hold.</p>
+    <p class="body">Most national health workforce programs run one mode at a time: a wave of trainings, then a gap, then a wave of TOTs, then a gap, then maybe drills. Each wave matters, but the rhythm between them is what makes the skills stick. We're proposing a single 27-week cadence where four complementary modes run in parallel — each amplifying the others — so trainees come out the other end with shared language, shared practice, and demonstrated capability at their own hospital.</p>
+    <p class="body">The same logic applies to Disaster Preparedness. Rather than treating it as a separate program with its own calendar, we interleave it with Emergency Care so the same six entities and twelve hospitals carry both improvements forward together.</p>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- TWO PROGRAMS -->
+  <!-- ============================================ -->
+  <section class="layer alt">
+    <div class="inner">
+      <div class="eyebrow">Two programs · One rhythm</div>
+      <h2>Emergency Care and Disaster Preparedness move together.</h2>
+      <p class="deck">Both programs share the same six entities, the same twelve hospitals, the same training week. Trainees and trainers experience them as a single integrated effort — not two competing demands on their calendar.</p>
+
+      <div class="progs">
+        <div class="prog ec">
+          <div class="pp">Program 1</div>
+          <h3>Emergency Care</h3>
+          <p class="descr">Building everyday emergency-care competency across the system — from full-course BEC training to specialist process TOT to QI projects at the hospital level.</p>
+          <ul>
+            <li><strong>BEC Foundation</strong> — 8 events / month, two parallel tracks (full + hybrid)</li>
+            <li><strong>EC Process TOT</strong> — alternating monthly 3-day national TOTs</li>
+            <li><strong>EC Microlearning</strong> — half-day sessions at 2 hospitals × 3 cohorts</li>
+            <li><strong>QI Showcase</strong> — end-of-cohort project presentation per hospital</li>
+            <li><strong>EC Closing</strong> — flagship national event in December</li>
+          </ul>
+        </div>
+        <div class="prog dp">
+          <div class="pp">Program 2</div>
+          <h3>Disaster Preparedness</h3>
+          <p class="descr">Building hospital resilience and MCM (mass-casualty management) capability through specialist trainer renewal, microlearning, and hospital-led drills.</p>
+          <ul>
+            <li><strong>D/MCM TOT</strong> — alternating monthly 3-day national TOTs</li>
+            <li><strong>D Microlearning</strong> — half-day sessions at 2 hospitals × 3 cohorts</li>
+            <li><strong>Hospital Drill</strong> — implementation + drill per hospital</li>
+            <li><strong>D/MCM Closing</strong> — flagship national event in December</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- FOUR COMPONENTS -->
+  <!-- ============================================ -->
+  <section class="layer">
+    <div class="eyebrow">The model</div>
+    <h2>Four components running side by side.</h2>
+    <p class="deck">Each component plays a distinct role. None of them can carry the program alone — but together they give every trainee multiple, reinforcing touchpoints over six months.</p>
+
+    <div class="pillars">
+      <div class="pillar p1">
+        <div class="num">01</div>
+        <div class="role">Foundation</div>
+        <h3>BEC base</h3>
+        <p>Continuous weekly delivery of full and hybrid BEC across all six entities. Always running. The constant heartbeat.</p>
+        <div class="rhythm"><span class="l">Rhythm</span>Weekly · all 6 entities</div>
+      </div>
+      <div class="pillar p2">
+        <div class="num">02</div>
+        <div class="role">Reinforcement</div>
+        <h3>Process &amp; Disaster TOT</h3>
+        <p>One specialist 3-day TOT each month, alternating between Emergency Care Process and Disaster/MCM tracks. Renews the trainer pool.</p>
+        <div class="rhythm"><span class="l">Rhythm</span>Monthly · alternating</div>
+      </div>
+      <div class="pillar p3">
+        <div class="num">03</div>
+        <div class="role">Hospital practice</div>
+        <h3>Microlearning + Drill / QI</h3>
+        <p>8-week cohorts at four hospitals at a time — half-day sessions every week, ending in a hospital-led drill or QI showcase.</p>
+        <div class="rhythm"><span class="l">Rhythm</span>3 cohorts · 12 hospitals</div>
+      </div>
+      <div class="pillar p4">
+        <div class="num">04</div>
+        <div class="role">Closure</div>
+        <h3>Program Closings</h3>
+        <p>Two flagship national events — one for Emergency Care, one for Disaster Preparedness — to recognize, showcase, and set forward direction.</p>
+        <div class="rhythm"><span class="l">Rhythm</span>Once · December 10 + 17</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- DESIGN PRINCIPLES -->
+  <!-- ============================================ -->
+  <section class="layer dark">
+    <div class="inner">
+      <div class="eyebrow">Design principles</div>
+      <h2>How the rhythm is built.</h2>
+      <p class="deck">Six choices that hold the model together. Each is a deliberate trade-off — not a default.</p>
+
+      <div class="principles">
+        <div class="principle">
+          <div class="pnum">01</div>
+          <div>
+            <h4>Parallel, not serial</h4>
+            <p>All four components run at the same time. We don't wait for one wave to finish before starting the next. The rhythm comes from the overlap.</p>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="pnum">02</div>
+          <div>
+            <h4>Foundation never stops</h4>
+            <p>BEC delivery runs every week of the program. Other components layer on top — but the foundation is the constant.</p>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="pnum">03</div>
+          <div>
+            <h4>Specialist renewal monthly</h4>
+            <p>TOTs alternate by track. We refresh either Process (EC) or Disaster/MCM trainers once a month — keeping both pools active without spiking demand.</p>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="pnum">04</div>
+          <div>
+            <h4>Hospitals carry the practice</h4>
+            <p>The hardest part of training is what happens after the course. Microlearning and culmination events put the practice where the work is — at the hospital, with in-hospital champions.</p>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="pnum">05</div>
+          <div>
+            <h4>Phase-in, not full-throttle from day one</h4>
+            <p>Month 1 is for setup. No TOT yet. Hospital cohorts start in Week 3 to allow facility assessment. Foundation begins immediately, but everything else respects the readiness curve.</p>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="pnum">06</div>
+          <div>
+            <h4>Recognition matters</h4>
+            <p>The two closing events aren't ceremonial — they're contracts. Public recognition signals that the work was seen, valued, and is expected to continue past December.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- RHYTHM CHART -->
+  <!-- ============================================ -->
+  <section class="layer">
+    <div class="eyebrow">A representative month</div>
+    <h2>What four weeks look like in practice.</h2>
+    <p class="deck">A snapshot of any mid-program month. Note how each row keeps moving while the others move alongside — no empty weeks, no idle components.</p>
+
+    <div class="rhythm-chart">
+      <div class="scale">
+        <div class="lbl">_</div>
+        <div>Wk 1 · Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div>
+        <div>Wk 2 · Sun</div><div>Wk 3 · Sun</div><div>Wk 4 · Sun</div>
+      </div>
+      <div class="row">
+        <div class="lbl">BEC track A<span class="sub">Entity rotation</span></div>
+        <div class="cell bec4">BEC4</div><div class="cell bec4">·</div><div class="cell bec4">·</div><div class="cell bec4">·</div><div class="cell empty"></div>
+        <div class="cell bec2">BEC2</div><div class="cell bec4">BEC4</div><div class="cell bec2">BEC2</div>
+      </div>
+      <div class="row">
+        <div class="lbl">BEC track B<span class="sub">Entity rotation</span></div>
+        <div class="cell bec2">BEC2</div><div class="cell bec2">·</div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div>
+        <div class="cell bec4">BEC4</div><div class="cell bec2">BEC2</div><div class="cell bec4">BEC4</div>
+      </div>
+      <div class="row">
+        <div class="lbl">BEC TOT<span class="sub">Monthly, W1 Wed–Thu</span></div>
+        <div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell tot">TOT</div><div class="cell tot">TOT</div>
+        <div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div>
+      </div>
+      <div class="row">
+        <div class="lbl">Specialist TOT<span class="sub">Monthly, alternates</span></div>
+        <div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div>
+        <div class="cell empty"></div><div class="cell proc">P-TOT (3d)</div><div class="cell empty"></div>
+      </div>
+      <div class="row">
+        <div class="lbl">Hospital ML<span class="sub">Weekly Thu, 4 hospitals</span></div>
+        <div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell ml">ML × 4</div>
+        <div class="cell ml">ML × 4</div><div class="cell ml">ML × 4</div><div class="cell ml">ML × 4</div>
+      </div>
+    </div>
+    <p class="body" style="margin-top:16px;color:var(--grey);font-size:12.5px;font-style:italic;">Color codes match the rest of the site. Each row is one component; each cell is one working day (Sun–Thu).</p>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- OUTCOMES -->
+  <!-- ============================================ -->
+  <section class="layer alt">
+    <div class="inner">
+      <div class="eyebrow">What changes by December</div>
+      <h2>The 6-month outcome.</h2>
+      <p class="deck">The headline numbers are not the goal — they're the proof that the rhythm ran. The goal is the system change.</p>
+
+      <div class="outcomes">
+        <div class="outcome">
+          <div class="o-num">1,400</div>
+          <div class="o-lbl">Trainees reached</div>
+          <p>Across both programs, six entities, twelve hospitals. Trained, retrained, and reinforced.</p>
+        </div>
+        <div class="outcome">
+          <div class="o-num">12</div>
+          <div class="o-lbl">Hospitals with practice</div>
+          <p>Six hospitals can run a disaster drill. Six hospitals have a documented QI project. All twelve have in-house champions.</p>
+        </div>
+        <div class="outcome">
+          <div class="o-num">11</div>
+          <div class="o-lbl">TOT cycles delivered</div>
+          <p>A renewed trainer pool — BEC, EC Process, Disaster/MCM — ready to sustain training beyond this program.</p>
+        </div>
+        <div class="outcome">
+          <div class="o-num">266</div>
+          <div class="o-lbl">Training day-events</div>
+          <p>Six months in which something is happening, somewhere, every working week.</p>
+        </div>
+        <div class="outcome">
+          <div class="o-num">2</div>
+          <div class="o-lbl">Public recognitions</div>
+          <p>Two flagship closing events. Trainers acknowledged. Hospitals showcased. Future commitments locked.</p>
+        </div>
+        <div class="outcome">
+          <div class="o-num">1</div>
+          <div class="o-lbl">Integrated rhythm</div>
+          <p>The most important outcome: a model that other programs can adopt — and that we can run again.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- CLOSING CTA -->
+  <!-- ============================================ -->
+  <section class="layer">
+    <div class="eyebrow">Where to go next</div>
+    <h2>Read the plan, not the idea.</h2>
+    <p class="deck">If the concept tracks, the next step is the schedule. Open the master plan to see every event, week-by-week, across both programs.</p>
+
+    <div class="cta">
+      <div>
+        <h3>Read the full plan</h3>
+        <p>153 events. 226 training days. Four components. Every working day mapped, every entity placed, every hospital cohort scheduled.</p>
+      </div>
+      <div class="cta-actions">
+        <a href="combined.html" class="cta-btn">Open Master Plan</a>
+        <a href="calendar.html" class="cta-btn ghost">View Calendar</a>
+        <a href="index.html" class="cta-btn ghost">Back to Home</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" style="max-width:1080px;margin:0 auto;padding:14px 32px 32px;">
+    <span>Emergency Care + Disaster Preparedness Program · The Idea</span>
+    <span>v1 · WHO Country Office Egypt · 2026</span>
+  </footer>
+
+  <script src="assets/nav.js"></script>
+</body>
+</html>
