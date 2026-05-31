@@ -1,0 +1,28 @@
+# EC + DP Timeline 2026 — Docker Compose for VPS deployment
+#
+# Serves the static site on port 8090.
+# Nginx Proxy Manager then proxies timeline.endura-assess.com → http://<VPS-IP>:8090
+#
+# Usage:
+#   cd /opt/timeline    (or wherever you cloned the repo)
+#   docker compose up -d
+#   docker compose logs -f      # to verify
+#
+# Update after `git pull`:  no restart needed — files served via read-only volume
+# Full restart if needed:  docker compose restart
+
+services:
+  timeline:
+    image: nginx:alpine
+    container_name: timeline-site
+    restart: unless-stopped
+    ports:
+      - "8090:80"
+    volumes:
+      # Mount the repo root as the web root (read-only)
+      - ./:/usr/share/nginx/html:ro
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

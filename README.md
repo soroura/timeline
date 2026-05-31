@@ -3,7 +3,7 @@
 Self-contained static site for the **Emergency Care + Disaster Preparedness** integrated capacity-building program.
 Period: **14 Jun 2026 → 17 Dec 2026** · 27 weeks · 170 events · 1,420 trainees · 6 entities · 12 hospitals.
 
-Target deployment domain: **timeline.endura.assess.com**
+Target deployment domain: **timeline.endura-assess.com**
 
 ---
 
@@ -49,18 +49,18 @@ npx serve -p 8765 .
 
 ---
 
-## Deployment to `timeline.endura.assess.com`
+## Deployment to `timeline.endura-assess.com`
 
 ### Option A — Static host (fastest)
 
 Drop the `ec-dp-timeline/` folder onto any static host:
 
-- **Netlify** — drag-and-drop the folder, set custom domain `timeline.endura.assess.com`
+- **Netlify** — drag-and-drop the folder, set custom domain `timeline.endura-assess.com`
 - **Vercel** — `vercel --prod` from the folder; add custom domain
 - **GitHub Pages** — push to a repo, enable Pages, configure CNAME
 - **Cloudflare Pages** — connect to git, deploy
 
-For all of these, you'll need to add a `CNAME` (or `A`) DNS record pointing `timeline.endura.assess.com` to the host.
+For all of these, you'll need to add a `CNAME` (or `A`) DNS record pointing `timeline.endura-assess.com` to the host.
 
 ### Option B — Nginx (self-hosted)
 
@@ -86,7 +86,7 @@ Then point CloudFront → S3, attach the ACM cert, and CNAME the domain.
 
 ## DNS setup (for any deployment option)
 
-Add this record at your DNS provider for `endura.assess.com`:
+Add this record at your DNS provider for `endura-assess.com`:
 
 | Type  | Host       | Value                    | Notes |
 |-------|------------|--------------------------|-------|
