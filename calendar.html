@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Full Calendar — EC + DP Timeline 2026</title>
+<link rel="stylesheet" href="assets/shared.css">
+<style>
+  .cal-toolbar {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 18px; flex-wrap: wrap;
+  }
+  .cal-toolbar .grow { flex: 1; }
+
+  /* Calendar grid */
+  .cal-month {
+    background: var(--bg-card); border: 1px solid var(--hairline);
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .cal-month .head {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--charcoal); color: var(--white);
+    padding: 12px 18px;
+  }
+  .cal-month .head .title {
+    font-family: Georgia, serif;
+    font-size: 18px; font-weight: 700;
+  }
+  .cal-month .head .meta {
+    font-size: 10.5px; letter-spacing: 0.8px; text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: var(--bg-alt);
+    gap: 1px;
+  }
+  .cal-grid .dow {
+    background: var(--bg-soft);
+    text-align: center;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: var(--grey);
+    padding: 8px 0;
+  }
+  .cal-grid .day {
+    background: var(--bg-card);
+    min-height: 110px;
+    padding: 6px 8px;
+    display: flex; flex-direction: column;
+  }
+  .cal-grid .day.weekend { background: #FBF8F1; }
+  .cal-grid .day.outside { background: var(--bg-soft); color: var(--grey-soft); }
+  .cal-grid .day.outside .dnum { color: var(--grey-soft); }
+  .cal-grid .day .dnum {
+    font-family: Georgia, serif;
+    font-size: 13px; font-weight: 700;
+    color: var(--charcoal);
+    margin-bottom: 4px;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .cal-grid .day .dnum .wk {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.8px;
+    color: var(--grey-soft);
+    text-transform: uppercase;
+  }
+  .events { display: flex; flex-direction: column; gap: 2px; }
+  .ev {
+    font-size: 10px; padding: 2px 6px;
+    color: var(--white); font-weight: 600;
+    line-height: 1.25; border-radius: 1px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .ev.bec4 { background: var(--terra-d); }
+  .ev.bec2 { background: var(--mustard); color: var(--white); }
+  .ev.btot { background: var(--forest); }
+  .ev.ptot { background: var(--blue); }
+  .ev.dtot { background: var(--purple); }
+  .ev.ml-dis { background: var(--ml-purple); }
+  .ev.ml-ec  { background: var(--terra-d); opacity: 0.85; }
+  .ev.drill  { background: var(--forest); }
+  .ev.qi     { background: var(--red); }
+  .ev.close-ec  { background: var(--terra-d); border: 1px solid var(--charcoal); }
+  .ev.close-dmc { background: var(--purple); border: 1px solid var(--charcoal); }
+
+  .cal-summary {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .cal-summary .chip {
+    font-size: 9px; padding: 1px 6px;
+    color: var(--white); font-weight: 700;
+    letter-spacing: 0.3px;
+    border-radius: 8px;
+  }
+
+  /* Compact mode toggle */
+  .compact .cal-grid .day { min-height: 70px; }
+  .compact .cal-grid .day .events .ev { display: none; }
+  .compact .cal-grid .day .events::after {
+    content: attr(data-count) ' events';
+    font-size: 10px; color: var(--grey);
+    font-style: italic;
+  }
+</style>
+</head>
+<body data-nav="calendar">
+
+  <div class="wrap wide">
+    <div class="eyebrow">Cross-cutting view</div>
+    <h1>Full calendar — all events, both programs</h1>
+    <p class="lede">Every event from Emergency Care and Disaster Preparedness placed on its actual Sun-Thu working date. June 14 → December 17, 2026.</p>
+
+    <div class="rules" style="background:transparent;border-left:none;padding:0;margin:18px 0 8px;">
+      <div class="legend">
+        <span><span class="swatch" style="background:#96402B"></span>BEC Full</span>
+        <span><span class="swatch" style="background:#C99A3B"></span>BEC Hybrid</span>
+        <span><span class="swatch" style="background:#4A6B4A"></span>BEC TOT</span>
+        <span><span class="swatch" style="background:#1F77B4"></span>EC Process TOT</span>
+        <span><span class="swatch" style="background:#6F42C1"></span>D/MCM TOT</span>
+        <span><span class="swatch" style="background:#7A5C9C"></span>D Microlearning</span>
+        <span><span class="swatch" style="background:#96402B;opacity:0.85"></span>EC Microlearning</span>
+        <span><span class="swatch" style="background:#4A6B4A"></span>Hospital Drill</span>
+        <span><span class="swatch" style="background:#B33A3A"></span>QI Showcase</span>
+        <span><span class="swatch" style="background:#96402B;border:1px solid #2B2B2B"></span>EC Closing</span>
+        <span><span class="swatch" style="background:#6F42C1;border:1px solid #2B2B2B"></span>D/MCM Closing</span>
+      </div>
+    </div>
+
+    <div class="cal-toolbar">
+      <span class="grow"></span>
+      <label class="controls" style="display:inline-flex;background:var(--bg-card);border:1px solid var(--hairline);padding:6px 12px;gap:6px;cursor:pointer;font-size:12px;">
+        <input type="checkbox" id="compact-toggle"> Compact (event counts only)
+      </label>
+    </div>
+
+    <div id="calendar-container"></div>
+  </div>
+
+  <footer class="footer" style="max-width:1320px;margin:0 auto;padding:14px 32px 32px;">
+    <span>Emergency Care + Disaster Preparedness Program · Full calendar view</span>
+    <span>v1 · WHO Country Office Egypt · 2026</span>
+  </footer>
+
+  <script src="assets/nav.js"></script>
+  <script>
+  (function(){
+    const ENTITIES = ["EHA","SMC","PHC","EAO","Zamala","MOH"];
+    const START = new Date(Date.UTC(2026, 5, 14)); // Sun 14-Jun-2026
+    const MONTHS_ABBR = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const MONTHS_FULL = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    const DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    const ACTIVE_WEEKS = 24;
+    function addDays(d, n){ const r = new Date(d); r.setUTCDate(r.getUTCDate()+n); return r; }
+    function weekSun(w){ return addDays(START, (w-1)*7); }
+    function fmtDate(d){ return d.getUTCFullYear() + '-' + String(d.getUTCMonth()+1).padStart(2,'0') + '-' + String(d.getUTCDate()).padStart(2,'0'); }
+
+    // ===== EVENT GENERATION (per actual day) =====
+    function bec_pair(w){
+      const cycleIdx = ((w-1) % 6);
+      const pairIdx = Math.floor(cycleIdx % 3);
+      const e1 = ENTITIES[pairIdx*2];
+      const e2 = ENTITIES[pairIdx*2 + 1];
+      const swap = cycleIdx >= 3;
+      return [
+        { type: swap ? 'BEC2' : 'BEC4', entity: e1, days: swap ? 2 : 4 },
+        { type: swap ? 'BEC4' : 'BEC2', entity: e2, days: swap ? 4 : 2 },
+      ];
+    }
+    // Returns array of {date: 'YYYY-MM-DD', label, cls, layer, entity}
+    const dayEvents = [];   // flat list
+
+    function addDay(date, type, label, cls, layer, entity){
+      dayEvents.push({date: fmtDate(date), type, label, cls, layer, entity});
+    }
+
+    // L1: BEC4 Sun-Wed, BEC2 Sun-Mon, BEC-TOT (W1 of month) Wed-Thu
+    for (let w = 1; w <= ACTIVE_WEEKS; w++){
+      const sun = weekSun(w);
+      const [a, b] = bec_pair(w);
+      // BEC slot A
+      const aDays = a.type === 'BEC4' ? 4 : 2;
+      for (let i = 0; i < aDays; i++){
+        addDay(addDays(sun, i), a.type, `${a.type} · ${a.entity}`,
+          a.type === 'BEC4' ? 'bec4' : 'bec2', 1, a.entity);
+      }
+      // BEC slot B
+      const bDays = b.type === 'BEC4' ? 4 : 2;
+      for (let i = 0; i < bDays; i++){
+        addDay(addDays(sun, i), b.type, `${b.type} · ${b.entity}`,
+          b.type === 'BEC4' ? 'bec4' : 'bec2', 1, b.entity);
+      }
+      // BEC-TOT week 1 of each month (Wed-Thu)
+      if (((w-1) % 4 === 0) && (w !== 1)) {
+        addDay(addDays(sun, 3), 'BEC-TOT', 'BEC-TOT · National', 'btot', 1, 'National');
+        addDay(addDays(sun, 4), 'BEC-TOT', 'BEC-TOT · National', 'btot', 1, 'National');
+      }
+    }
+
+    // L2: P-TOT / D-TOT Tue-Thu W3 of each month
+    for (let m = 1; m <= 6; m++){
+      const week = (m-1)*4 + 3;
+      const sun = weekSun(week);
+      const isP = (m % 2 === 1);
+      const type = isP ? 'EC P-TOT' : 'D / MCM TOT';
+      const cls  = isP ? 'ptot' : 'dtot';
+      for (let i = 2; i <= 4; i++){ // Tue, Wed, Thu
+        addDay(addDays(sun, i), type, `${type} · National`, cls, 2, 'National');
+      }
+    }
+
+    // L3: Microlearning each Thu of cohort weeks except last (culmination)
+    const cohorts = [
+      {num:1, startW:3, endW:10,
+        hospitals:[{id:'D-Hospital 1',track:'D'},{id:'D-Hospital 2',track:'D'},{id:'E-Hospital 1',track:'E'},{id:'E-Hospital 2',track:'E'}]}, {num:2, startW:11, endW:18,
+        hospitals:[{id:'D-Hospital 3',track:'D'},{id:'D-Hospital 4',track:'D'},{id:'E-Hospital 3',track:'E'},{id:'E-Hospital 4',track:'E'}]}, {num:3, startW:19, endW:25,
+        hospitals:[{id:'D-Hospital 5',track:'D'},{id:'D-Hospital 6',track:'D'},{id:'E-Hospital 5',track:'E'},{id:'E-Hospital 6',track:'E'}]},
+    ];
+    cohorts.forEach(c => {
+      for (let w = c.startW; w <= c.endW; w++){
+        const thu = addDays(weekSun(w), 4);
+        const isLast = (w === c.endW);
+        c.hospitals.forEach(h => {
+          if (isLast){
+            if (h.track === 'D'){
+              addDay(thu, 'DRILL', `Drill · ${h.id}`, 'drill', 3, h.id);
+            } else {
+              addDay(thu, 'QI', `QI Showcase · ${h.id}`, 'qi', 3, h.id);
+            }
+          } else {
+            const cls = h.track === 'D' ? 'ml-dis' : 'ml-ec';
+            const lbl = h.track === 'D' ? 'D-ML' : 'EC-ML';
+            addDay(thu, lbl, `${lbl} · ${h.id}`, cls, 3, h.id);
+          }
+        });
+      }
+    });
+
+    // L4: Closings — EC Thu W26, D/MCM Thu W27
+    addDay(addDays(weekSun(26), 4), 'EC CLOSE', 'EC Program Closing · National', 'close-ec', 4, 'National');
+    addDay(addDays(weekSun(27), 4), 'D/MCM CLOSE', 'D/MCM Program Closing · National', 'close-dmc', 4, 'National');
+
+    // Group events by date
+    const byDate = {};
+    dayEvents.forEach(e => { (byDate[e.date] ||= []).push(e); });
+
+    // Build calendar for months Jun, Jul, Aug, Sep, Oct, Nov, Dec 2026
+    const container = document.getElementById('calendar-container');
+
+    function weekNum(date){
+      // weeks since program START (Sun 14-Jun-2026)
+      const diff = Math.floor((date - START) / (7 * 86400000));
+      const wk = diff + 1;
+      return (wk >= 1 && wk <= 27) ? wk : null;
+    }
+
+    function buildMonth(year, month0){
+      // month0: 0..11 (Jun=5)
+      const monthEl = document.createElement('div');
+      monthEl.className = 'cal-month';
+      // count events in this month
+      let evCount = 0;
+      for (const k in byDate){
+        const d = new Date(k + 'T00:00:00Z');
+        if (d.getUTCFullYear() === year && d.getUTCMonth() === month0) evCount += byDate[k].length;
+      }
+      monthEl.innerHTML = `
+        <div class="head">
+          <div class="title">${MONTHS_FULL[month0]} ${year}</div>
+          <div class="meta">${evCount} events</div>
+        </div>
+      `;
+      const grid = document.createElement('div');
+      grid.className = 'cal-grid';
+
+      // DOW headers
+      DOW.forEach(d => {
+        const cell = document.createElement('div');
+        cell.className = 'dow';
+        cell.textContent = d;
+        grid.appendChild(cell);
+      });
+
+      // First day of month — figure out its DOW (Sun=0)
+      const firstDay = new Date(Date.UTC(year, month0, 1));
+      const startDow = firstDay.getUTCDay();
+      const daysInMonth = new Date(Date.UTC(year, month0+1, 0)).getUTCDate();
+
+      // Previous month padding
+      for (let i = 0; i < startDow; i++){
+        const d = addDays(firstDay, -(startDow - i));
+        const cell = document.createElement('div');
+        cell.className = 'day outside' + ((d.getUTCDay() === 5 || d.getUTCDay() === 6) ? ' weekend' : '');
+        cell.innerHTML = `<div class="dnum">${d.getUTCDate()}</div>`;
+        grid.appendChild(cell);
+      }
+
+      // Days of month
+      for (let dd = 1; dd <= daysInMonth; dd++){
+        const d = new Date(Date.UTC(year, month0, dd));
+        const isoStr = fmtDate(d);
+        const dow = d.getUTCDay();
+        const isWeekend = (dow === 5 || dow === 6); // Fri/Sat
+        const wk = weekNum(d);
+        const cell = document.createElement('div');
+        cell.className = 'day' + (isWeekend ? ' weekend' : '');
+        const evs = byDate[isoStr] || [];
+        const evHtml = evs.map(e => `<div class="ev ${e.cls}" title="${e.label}">${e.label}</div>`).join('');
+        cell.innerHTML = `
+          <div class="dnum"><span>${dd}</span>${wk ? `<span class="wk">W${wk}</span>` : ''}</div>
+          <div class="events" data-count="${evs.length}">${evHtml}</div>
+        `;
+        grid.appendChild(cell);
+      }
+
+      // Trailing padding to fill row
+      const totalCells = startDow + daysInMonth;
+      const trailing = (7 - (totalCells % 7)) % 7;
+      for (let i = 1; i <= trailing; i++){
+        const d = new Date(Date.UTC(year, month0+1, i));
+        const cell = document.createElement('div');
+        cell.className = 'day outside' + ((d.getUTCDay() === 5 || d.getUTCDay() === 6) ? ' weekend' : '');
+        cell.innerHTML = `<div class="dnum">${d.getUTCDate()}</div>`;
+        grid.appendChild(cell);
+      }
+
+      monthEl.appendChild(grid);
+      container.appendChild(monthEl);
+    }
+
+    // Build months Jun-Dec 2026
+    for (let m = 5; m <= 11; m++){
+      buildMonth(2026, m);
+    }
+
+    // Compact mode toggle
+    document.getElementById('compact-toggle').addEventListener('change', e => {
+      container.classList.toggle('compact', e.target.checked);
+    });
+
+  })();
+  </script>
+</body>
+</html>

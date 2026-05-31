@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Day-Level Ledger — EC + DP Timeline 2026</title>
+<link rel="stylesheet" href="assets/shared.css">
+<style>
+  .toolbar {
+    background: var(--bg-card); border: 1px solid var(--hairline);
+    padding: 14px 18px; margin-bottom: 16px;
+    display: grid; grid-template-columns: repeat(5, 1fr) auto;
+    gap: 12px; align-items: end;
+  }
+  .toolbar .field { display: flex; flex-direction: column; gap: 4px; }
+  .toolbar .field label {
+    font-size: 9.5px; font-weight: 700;
+    letter-spacing: 1.2px; text-transform: uppercase;
+    color: var(--grey);
+  }
+  .toolbar .field input, .toolbar .field select {
+    padding: 6px 10px;
+    border: 1px solid var(--hairline);
+    background: var(--bg);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12.5px; color: var(--ink);
+  }
+  .toolbar .reset {
+    padding: 7px 14px;
+    background: var(--charcoal); color: var(--white);
+    border: 0; cursor: pointer;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.8px; text-transform: uppercase;
+  }
+  .toolbar .reset:hover { background: var(--terra-d); }
+
+  .program-pills {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .program-pills label {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px;
+    background: var(--bg-card); border: 1px solid var(--hairline);
+    font-size: 12px; cursor: pointer; user-select: none;
+    font-weight: 600;
+  }
+  .program-pills label input { margin: 0; }
+  .program-pills label.ec    { border-left: 3px solid var(--terra-d); }
+  .program-pills label.dp    { border-left: 3px solid var(--purple); }
+
+  .summary-bar {
+    display: flex; gap: 24px; flex-wrap: wrap;
+    background: var(--bg-alt); padding: 12px 18px;
+    border-left: 3px solid var(--terra);
+    margin-bottom: 18px;
+    font-size: 12px;
+  }
+  .summary-bar .s strong {
+    font-family: Georgia, serif; font-size: 16px;
+    color: var(--charcoal); display: block;
+  }
+  .summary-bar .s span {
+    font-size: 9.5px; font-weight: 700;
+    letter-spacing: 1.1px; text-transform: uppercase;
+    color: var(--grey);
+  }
+
+  table.ledger {
+    width: 100%; border-collapse: collapse;
+    background: var(--bg-card); border: 1px solid var(--hairline);
+    font-size: 12px;
+  }
+  table.ledger th {
+    background: var(--charcoal); color: var(--white);
+    text-align: left; padding: 9px 10px;
+    font-weight: 700; font-size: 9.5px;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    cursor: pointer; user-select: none;
+    position: sticky; top: 0;
+  }
+  table.ledger th.sorted::after { content: ' ▼'; font-size: 9px; opacity: 0.7; }
+  table.ledger th.sorted.asc::after { content: ' ▲'; }
+  table.ledger td { padding: 7px 10px; border-top: 1px solid var(--bg-alt); }
+  table.ledger tr:nth-child(even) td { background: var(--bg-soft); }
+  table.ledger td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  table.ledger td .wknum { font-size: 10px; color: var(--grey); }
+
+  /* Program badge */
+  .prog-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 2px;
+    font-size: 10px; font-weight: 700; color: var(--white);
+    letter-spacing: 0.4px;
+  }
+  .prog-badge.ec { background: var(--terra-d); }
+  .prog-badge.dp { background: var(--purple); }
+
+  .scroll-wrap {
+    max-height: 70vh; overflow: auto;
+    border: 1px solid var(--hairline);
+    background: var(--bg-card);
+  }
+
+  .dow {
+    display: inline-block; padding: 1px 6px;
+    background: var(--bg-alt); border-radius: 8px;
+    font-size: 10px; font-weight: 700; color: var(--grey);
+  }
+  .dow.thu { background: var(--bg-alt); color: var(--terra-d); }
+</style>
+</head>
+<body data-nav="day">
+
+  <div class="wrap wide">
+    <div class="eyebrow">Operations view</div>
+    <h1>Day-level ledger</h1>
+    <p class="lede">Every individual training-day across both programs — one row per day per event. Filter by program, component, entity, or date range.</p>
+
+    <!-- Program toggles -->
+    <div class="program-pills" id="program-pills">
+      <label class="ec"><input type="checkbox" data-program="Emergency Care" checked> Emergency Care</label>
+      <label class="dp"><input type="checkbox" data-program="Disaster Preparedness" checked> Disaster Preparedness</label>
+    </div>
+
+    <!-- Filters -->
+    <div class="toolbar">
+      <div class="field">
+        <label>From date</label>
+        <input type="date" id="f-from" value="2026-06-14">
+      </div>
+      <div class="field">
+        <label>To date</label>
+        <input type="date" id="f-to" value="2026-12-17">
+      </div>
+      <div class="field">
+        <label>Entity / target</label>
+        <select id="f-entity"></select>
+      </div>
+      <div class="field">
+        <label>Component</label>
+        <select id="f-component"></select>
+      </div>
+      <div class="field">
+        <label>Course type</label>
+        <select id="f-type"></select>
+      </div>
+      <button class="reset" id="reset">Reset</button>
+    </div>
+
+    <!-- Summary -->
+    <div class="summary-bar" id="summary"></div>
+
+    <div class="scroll-wrap">
+      <table class="ledger" id="ledger">
+        <thead>
+          <tr>
+            <th data-sort="date" class="sorted asc">Date</th>
+            <th data-sort="dow">DOW</th>
+            <th data-sort="week">Wk</th>
+            <th data-sort="program">Program</th>
+            <th data-sort="component">Component</th>
+            <th data-sort="type">Course type</th>
+            <th data-sort="entity">Entity / hospital</th>
+            <th data-sort="trainers">Trainers</th>
+            <th data-sort="halfday">Format</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer class="footer" style="max-width:1320px;margin:0 auto;padding:14px 32px 32px;">
+    <span>Emergency Care + Disaster Preparedness Program · Day-level ledger</span>
+    <span>v2 · WHO Country Office Egypt · 2026</span>
+  </footer>
+
+  <script src="assets/nav.js"></script>
+  <script>
+  (function(){
+    const ENTITIES = ["EHA","SMC","PHC","EAO","Zamala","MOH"];
+    const START = new Date(Date.UTC(2026, 5, 14));
+    const DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    const MONTHS_ABBR = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const ACTIVE_WEEKS = 24;
+    function addDays(d, n){ const r = new Date(d); r.setUTCDate(r.getUTCDate()+n); return r; }
+    function weekSun(w){ return addDays(START, (w-1)*7); }
+    function isoDate(d){ return d.getUTCFullYear() + '-' + String(d.getUTCMonth()+1).padStart(2,'0') + '-' + String(d.getUTCDate()).padStart(2,'0'); }
+    function fmtDate(d){ return String(d.getUTCDate()).padStart(2,'0') + '-' + MONTHS_ABBR[d.getUTCMonth()] + '-' + String(d.getUTCFullYear()).slice(2); }
+    function weekNum(d){ return Math.floor((d - START) / (7*86400000)) + 1; }
+
+    // Program + component mapping
+    function programFor(t){
+      const EC = ['BEC4','BEC2','BEC-TOT','EC P-TOT','EC Microlearning','QI Showcase','EC Program Closing'];
+      return EC.includes(t) ? 'Emergency Care' : 'Disaster Preparedness';
+    }
+    function componentFor(t){
+      if (['BEC4','BEC2','BEC-TOT'].includes(t)) return 'BEC Foundation';
+      if (t === 'EC P-TOT' || t === 'D / MCM TOT') return 'Process & Disaster TOT';
+      if (['D Microlearning','EC Microlearning','Drill (implementation)','QI Showcase'].includes(t)) return 'Hospital Microlearning';
+      if (['EC Program Closing','D/MCM Program Closing'].includes(t)) return 'Program Closings';
+      return '';
+    }
+
+    // ===== Generate day-level rows =====
+    const rows = [];
+    let rid = 1;
+    function pushDay(date, type, entity, trainers, halfday){
+      rows.push({
+        id: rid++,
+        date: isoDate(date),
+        dateObj: date,
+        dow: DOW[date.getUTCDay()],
+        week: weekNum(date),
+        program: programFor(type),
+        component: componentFor(type),
+        type, entity, trainers, halfday
+      });
+    }
+
+    function bec_pair(w){
+      const cycleIdx = ((w-1) % 6);
+      const pairIdx = Math.floor(cycleIdx % 3);
+      const e1 = ENTITIES[pairIdx*2];
+      const e2 = ENTITIES[pairIdx*2 + 1];
+      const swap = cycleIdx >= 3;
+      return [
+        { type: swap ? 'BEC2' : 'BEC4', entity: e1 },
+        { type: swap ? 'BEC4' : 'BEC2', entity: e2 },
+      ];
+    }
+    // BEC base + TOT
+    for (let w = 1; w <= ACTIVE_WEEKS; w++){
+      const sun = weekSun(w);
+      const [a, b] = bec_pair(w);
+      const aLen = a.type === 'BEC4' ? 4 : 2;
+      for (let i = 0; i < aLen; i++) pushDay(addDays(sun, i), a.type, a.entity, '3M + 2L', 'Full day');
+      const bLen = b.type === 'BEC4' ? 4 : 2;
+      for (let i = 0; i < bLen; i++) pushDay(addDays(sun, i), b.type, b.entity, '3M + 2L', 'Full day');
+      if (((w-1) % 4 === 0) && (w !== 1)) {
+        pushDay(addDays(sun, 3), 'BEC-TOT', 'National', '3M + 2L', 'Full day');
+        pushDay(addDays(sun, 4), 'BEC-TOT', 'National', '3M + 2L', 'Full day');
+      }
+    }
+    // Monthly P/D-TOT
+    for (let m = 1; m <= 6; m++){
+      const week = (m-1)*4 + 3;
+      const sun = weekSun(week);
+      const isP = (m % 2 === 1);
+      const type = isP ? 'EC P-TOT' : 'D / MCM TOT';
+      for (let i = 2; i <= 4; i++) pushDay(addDays(sun, i), type, 'National', '3M + 2L', 'Full day');
+    }
+    // Hospital microlearning
+    const cohorts = [
+      {num:1, startW:3, endW:10,  hospitals:[{id:'D-Hospital 1',track:'D'},{id:'D-Hospital 2',track:'D'},{id:'E-Hospital 1',track:'E'},{id:'E-Hospital 2',track:'E'}]}, {num:2, startW:11, endW:18, hospitals:[{id:'D-Hospital 3',track:'D'},{id:'D-Hospital 4',track:'D'},{id:'E-Hospital 3',track:'E'},{id:'E-Hospital 4',track:'E'}]}, {num:3, startW:19,endW:25, hospitals:[{id:'D-Hospital 5',track:'D'},{id:'D-Hospital 6',track:'D'},{id:'E-Hospital 5',track:'E'},{id:'E-Hospital 6',track:'E'}]},
+    ];
+    cohorts.forEach(c => {
+      for (let w = c.startW; w <= c.endW; w++){
+        const thu = addDays(weekSun(w), 4);
+        const isLast = (w === c.endW);
+        c.hospitals.forEach(h => {
+          if (isLast){
+            const type = h.track === 'D' ? 'Drill (implementation)' : 'QI Showcase';
+            pushDay(thu, type, h.id, '1M + champions', 'Full day');
+          } else {
+            const type = h.track === 'D' ? 'D Microlearning' : 'EC Microlearning';
+            pushDay(thu, type, h.id, '1M + champions', 'Half day');
+          }
+        });
+      }
+    });
+    // Closings
+    pushDay(addDays(weekSun(26), 4), 'EC Program Closing',     'National', '5M + 5L', 'Full day');
+    pushDay(addDays(weekSun(27), 4), 'D/MCM Program Closing', 'National', '5M + 5L', 'Full day');
+
+    rows.sort((a,b) => a.dateObj - b.dateObj || a.program.localeCompare(b.program));
+
+    // Populate filter selects
+    const entities = Array.from(new Set(rows.map(r => r.entity))).sort();
+    const components = Array.from(new Set(rows.map(r => r.component))).sort();
+    const types = Array.from(new Set(rows.map(r => r.type))).sort();
+    const entSel = document.getElementById('f-entity');
+    const compSel = document.getElementById('f-component');
+    const typeSel = document.getElementById('f-type');
+    entSel.innerHTML  = '<option value="">All entities</option>' + entities.map(e => `<option>${e}</option>`).join('');
+    compSel.innerHTML = '<option value="">All components</option>' + components.map(c => `<option>${c}</option>`).join('');
+    typeSel.innerHTML = '<option value="">All course types</option>' + types.map(t => `<option>${t}</option>`).join('');
+
+    const tbody = document.getElementById('rows');
+    const summary = document.getElementById('summary');
+    let sortKey = 'date', sortAsc = true;
+
+    function badgeCls(type){
+      if (type === 'BEC4') return 'bec4';
+      if (type === 'BEC2') return 'bec2';
+      if (type === 'BEC-TOT') return 'btot';
+      if (type === 'EC P-TOT') return 'ptot';
+      if (type === 'D / MCM TOT') return 'dtot';
+      if (type === 'D Microlearning') return 'ml-dis';
+      if (type === 'EC Microlearning') return 'ml-ec';
+      if (type === 'Drill (implementation)') return 'drill';
+      if (type === 'QI Showcase') return 'qi';
+      if (type === 'EC Program Closing') return 'close-ec';
+      if (type === 'D/MCM Program Closing') return 'close-dmc';
+      return '';
+    }
+
+    function filter(){
+      const activePrograms = new Set(Array.from(document.querySelectorAll('#program-pills input:checked')).map(i => i.dataset.program));
+      const fFrom = document.getElementById('f-from').value;
+      const fTo = document.getElementById('f-to').value;
+      const fEnt = entSel.value;
+      const fComp = compSel.value;
+      const fType = typeSel.value;
+      return rows.filter(r => {
+        if (!activePrograms.has(r.program)) return false;
+        if (fFrom && r.date < fFrom) return false;
+        if (fTo && r.date > fTo) return false;
+        if (fEnt && r.entity !== fEnt) return false;
+        if (fComp && r.component !== fComp) return false;
+        if (fType && r.type !== fType) return false;
+        return true;
+      });
+    }
+
+    function render(){
+      const data = filter();
+      data.sort((a,b) => {
+        let av = a[sortKey], bv = b[sortKey];
+        if (sortKey === 'date') { av = a.dateObj; bv = b.dateObj; }
+        if (av < bv) return sortAsc ? -1 : 1;
+        if (av > bv) return sortAsc ? 1 : -1;
+        return 0;
+      });
+
+      tbody.innerHTML = data.map(r => `
+        <tr>
+          <td>${fmtDate(r.dateObj)}</td>
+          <td><span class="dow ${r.dow === 'Thu' ? 'thu' : ''}">${r.dow}</span></td>
+          <td><span class="wknum">W${r.week}</span></td>
+          <td><span class="prog-badge ${r.program === 'Emergency Care' ? 'ec' : 'dp'}">${r.program === 'Emergency Care' ? 'EC' : 'DP'}</span></td>
+          <td>${r.component}</td>
+          <td><span class="ev-badge ${badgeCls(r.type)}">${r.type}</span></td>
+          <td>${r.entity}</td>
+          <td>${r.trainers}</td>
+          <td>${r.halfday}</td>
+        </tr>
+      `).join('');
+
+      const totalDays = data.length;
+      const uniqDates = new Set(data.map(r => r.date)).size;
+      const ec = data.filter(r => r.program === 'Emergency Care').length;
+      const dp = data.filter(r => r.program === 'Disaster Preparedness').length;
+      summary.innerHTML = `
+        <div class="s"><strong>${totalDays}</strong><span>Day-events shown</span></div>
+        <div class="s"><strong>${uniqDates}</strong><span>Calendar days</span></div>
+        <div class="s"><strong>${ec}</strong><span>Emergency Care</span></div>
+        <div class="s"><strong>${dp}</strong><span>Disaster Preparedness</span></div>
+      `;
+    }
+
+    document.querySelectorAll('#ledger th[data-sort]').forEach(th => {
+      th.addEventListener('click', () => {
+        const k = th.dataset.sort;
+        if (sortKey === k) sortAsc = !sortAsc;
+        else { sortKey = k; sortAsc = true; }
+        document.querySelectorAll('#ledger th').forEach(x => x.classList.remove('sorted','asc'));
+        th.classList.add('sorted');
+        if (sortAsc) th.classList.add('asc');
+        render();
+      });
+    });
+
+    document.querySelectorAll('#program-pills input').forEach(i => i.addEventListener('change', render));
+    ['f-from','f-to','f-entity','f-component','f-type'].forEach(id => document.getElementById(id).addEventListener('change', render));
+    document.getElementById('reset').addEventListener('click', () => {
+      document.querySelectorAll('#program-pills input').forEach(i => i.checked = true);
+      document.getElementById('f-from').value = '2026-06-14';
+      document.getElementById('f-to').value = '2026-12-17';
+      entSel.value = ''; compSel.value = ''; typeSel.value = '';
+      render();
+    });
+
+    render();
+  })();
+  </script>
+</body>
+</html>

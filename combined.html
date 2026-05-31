@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="assets/shared.css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Combined — All Layers</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Helvetica Neue', Arial, sans-serif; background: #F8F4ED; color: #1A1A1A; font-size: 14px; line-height: 1.5; }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 28px 32px 64px; }
+  .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #C75B3C; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+  .eyebrow::before { content: ''; width: 24px; height: 2px; background: #C75B3C; }
+  h1 { font-family: Georgia, serif; font-size: 36px; font-weight: 700; color: #2B2B2B; margin: 0 0 6px; letter-spacing: -0.5px; }
+  .lede { font-family: Georgia, serif; font-style: italic; font-size: 16px; color: #6E6E6E; max-width: 920px; }
+  hr.rule { border: 0; height: 1px; background: #D8D0C2; margin: 28px 0; }
+  h2 { font-family: Georgia, serif; font-size: 22px; color: #2B2B2B; margin: 0 0 16px; font-weight: 700; }
+  .section-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #C75B3C; margin-bottom: 4px; }
+
+  .layers-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0 28px; }
+  .layer-chip { display: flex; align-items: center; gap: 10px; background: #FFFFFF; border: 1px solid #D8D0C2; padding: 10px 14px; }
+  .layer-chip .num { font-family: Georgia, serif; font-size: 22px; font-weight: 700; color: #C75B3C; background: #EFE9DD; padding: 3px 12px; border-radius: 2px; }
+  .layer-chip .lbl { font-size: 9.5px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #6E6E6E; }
+  .layer-chip .ttl { font-family: Georgia, serif; font-size: 13px; color: #2B2B2B; font-weight: 700; }
+
+  .kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 32px; }
+  .kpi { background: #FFFFFF; border: 1px solid #D8D0C2; border-top: 3px solid #C75B3C; padding: 16px 18px; min-height: 96px; }
+  .kpi-label { font-size: 9.5px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; color: #6E6E6E; margin-bottom: 8px; }
+  .kpi-value { font-family: Georgia, serif; font-size: 26px; font-weight: 700; color: #2B2B2B; line-height: 1; }
+  .kpi-sub { font-size: 11px; color: #6E6E6E; margin-top: 6px; font-style: italic; }
+  .kpi.mustard { border-top-color: #C99A3B; }
+  .kpi.forest  { border-top-color: #4A6B4A; }
+  .kpi.dark    { border-top-color: #96402B; }
+  .kpi.purple  { border-top-color: #6F42C1; }
+  .kpi.charcoal { border-top-color: #2B2B2B; }
+
+  table.data { width: 100%; border-collapse: collapse; background: #FFFFFF; border: 1px solid #D8D0C2; font-size: 12.5px; }
+  table.data th { background: #2B2B2B; color: #FFFFFF; text-align: left; padding: 9px 12px; font-weight: 700; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.8px; }
+  table.data td { padding: 8px 12px; border-top: 1px solid #EFE9DD; }
+  table.data tr:nth-child(even) td { background: #FCFAF5; }
+  table.data td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  table.data tr.total td { background: #EFE9DD; font-weight: 700; }
+
+  .months { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 32px; }
+  .month-card { background: #FFFFFF; border: 1px solid #D8D0C2; padding: 14px 16px; }
+  .month-title { font-family: Georgia, serif; font-size: 16px; font-weight: 700; color: #2B2B2B; margin-bottom: 4px; }
+  .month-sub { font-size: 11px; color: #6E6E6E; margin-bottom: 12px; }
+  .week-row { display: grid; grid-template-columns: 36px 1fr; align-items: start; padding: 7px 0; border-top: 1px dashed #E4DCC9; font-size: 12px; }
+  .week-row:first-of-type { border-top: 0; }
+  .week-num { font-family: Georgia, serif; font-weight: 700; color: #6E6E6E; font-size: 11px; padding-top: 2px; }
+  .events { display: flex; flex-wrap: wrap; gap: 4px; }
+  .pill { display: inline-block; padding: 3px 8px; border-radius: 2px; font-size: 10px; font-weight: 600; color: #FFFFFF; white-space: nowrap; line-height: 1.3; }
+  .pill.bec4 { background: #96402B; }
+  .pill.bec2 { background: #C99A3B; }
+  .pill.btot { background: #4A6B4A; }
+  .pill.ptot { background: #1F77B4; }
+  .pill.dtot { background: #6F42C1; }
+  .pill.l3-ml { background: #7A5C9C; }
+  .pill.l3-end { background: #B33A3A; }
+  .pill.close-ec { background: #96402B; border: 1px solid #2B2B2B; }
+  .pill.close-dmc { background: #6F42C1; border: 1px solid #2B2B2B; }
+  .pill .ent { font-weight: 400; opacity: 0.85; margin-left: 4px; }
+
+  .schedule-wrap { background: #FFFFFF; border: 1px solid #D8D0C2; padding: 0; max-height: 520px; overflow: auto; }
+  table.sched { width: 100%; border-collapse: collapse; font-size: 12px; }
+  table.sched th { background: #2B2B2B; color: #FFFFFF; padding: 9px 10px; text-align: left; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; position: sticky; top: 0; }
+  table.sched td { padding: 7px 10px; border-top: 1px solid #EFE9DD; font-size: 12px; }
+  table.sched tr:nth-child(even) td { background: #FCFAF5; }
+  table.sched td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .ev-badge { display: inline-block; padding: 2px 8px; border-radius: 2px; font-size: 10.5px; font-weight: 700; color: #FFFFFF; }
+  .ev-badge.bec4 { background: #96402B; }
+  .ev-badge.bec2 { background: #C99A3B; }
+  .ev-badge.btot { background: #4A6B4A; }
+  .ev-badge.ptot { background: #1F77B4; }
+  .ev-badge.dtot { background: #6F42C1; }
+  .ev-badge.ml-dis { background: #6F42C1; }
+  .ev-badge.ml-ec { background: #96402B; }
+  .ev-badge.drill { background: #4A6B4A; }
+  .ev-badge.qi { background: #B33A3A; }
+  .ev-badge.close-ec { background: #96402B; border: 1px solid #FFF; }
+  .ev-badge.close-dmc { background: #6F42C1; border: 1px solid #FFF; }
+  .layer-tag-cell { font-size: 9.5px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #6E6E6E; }
+
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11.5px; color: #6E6E6E; margin-bottom: 12px; }
+  .legend .swatch { display: inline-block; width: 12px; height: 12px; vertical-align: middle; margin-right: 6px; }
+  .controls { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; font-size: 12px; }
+  .controls label { display: inline-flex; align-items: center; gap: 6px; background: #FFFFFF; border: 1px solid #D8D0C2; padding: 6px 12px; cursor: pointer; user-select: none; }
+  .controls label input { margin: 0; }
+
+  .twocol { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 32px; }
+  .footer { border-top: 1px solid #D8D0C2; margin-top: 36px; padding-top: 14px; font-size: 11px; color: #6E6E6E; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body data-nav="master">
+<div class="wrap">
+
+  <div class="eyebrow">Master view · all active layers</div>
+  <h1>Combined Program — All Layers</h1>
+  <p class="lede">Every active layer of the program, stacked. Phase-in start: BEC Foundation runs full pace from Week 1; BEC-TOT begins Month 2; Hospital Microlearning begins Week 3 (2 weeks of hospital selection + facility assessment). Sun 14-Jun-2026 → Thu 17-Dec-2026.</p>
+
+  <div class="section-label">Active layers</div>
+  <div class="layers-strip">
+    <div class="layer-chip"><div class="num">01</div><div><div class="lbl">Foundation</div><div class="ttl">BEC base stream</div></div></div>
+    <div class="layer-chip"><div class="num">02</div><div><div class="lbl">Reinforcement</div><div class="ttl">Monthly P-TOT / D-TOT</div></div></div>
+    <div class="layer-chip"><div class="num">03</div><div><div class="lbl">Hospital practice</div><div class="ttl">Microlearning + culmination</div></div></div>
+    <div class="layer-chip"><div class="num">04</div><div><div class="lbl">Closings</div><div class="ttl">EC + D/MCM flagship events</div></div></div>
+  </div>
+
+  <div class="section-label">Combined snapshot · Jun 14 to Dec 17, 2026</div>
+  <h2>Program totals (Layers 1 + 2 + 3 + 4)</h2>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">Total events</div><div class="kpi-value">153</div><div class="kpi-sub">53 + 6 + 92 + 2</div></div>
+    <div class="kpi mustard"><div class="kpi-label">Training days</div><div class="kpi-value">226</div><div class="kpi-sub">154 + 18 + 52 + 2</div></div>
+    <div class="kpi forest"><div class="kpi-label">TOT cycles</div><div class="kpi-value">11</div><div class="kpi-sub">5 BEC (M1 skipped) + 3 P + 3 D/MCM</div></div>
+    <div class="kpi dark"><div class="kpi-label">Trainees reached</div><div class="kpi-value">1,400</div><div class="kpi-sub">1,060 + 120 + 120 + 100</div></div>
+    <div class="kpi purple"><div class="kpi-label">Hospitals engaged</div><div class="kpi-value">12</div><div class="kpi-sub">via L3 — 6 Disaster, 6 EC</div></div>
+    <div class="kpi charcoal"><div class="kpi-label">Trainer-days</div><div class="kpi-value">932</div><div class="kpi-sub">578 Master + 354 Local</div></div>
+  </div>
+
+  <hr class="rule">
+
+  <div class="twocol">
+    <div>
+      <div class="section-label">By layer</div>
+      <h2>Layer summary</h2>
+      <table class="data">
+        <thead><tr><th>Layer</th><th>Title</th><th class="num">Events</th><th class="num">Days</th><th class="num">Trainees</th><th class="num">Master-d</th><th class="num">Local-d</th></tr></thead>
+        <tbody>
+          <tr><td><strong>01</strong></td><td>BEC base stream</td><td class="num">53</td><td class="num">154</td><td class="num">1,060</td><td class="num">462</td><td class="num">308</td></tr>
+          <tr><td><strong>02</strong></td><td>Monthly P/D-TOT</td><td class="num">6</td><td class="num">18</td><td class="num">120</td><td class="num">54</td><td class="num">36</td></tr>
+          <tr><td><strong>03</strong></td><td>Hospital microlearning</td><td class="num">92</td><td class="num">52</td><td class="num">120</td><td class="num">52</td><td class="num">0</td></tr>
+          <tr><td><strong>04</strong></td><td>Program closings</td><td class="num">2</td><td class="num">2</td><td class="num">100</td><td class="num">10</td><td class="num">10</td></tr>
+          <tr class="total"><td>—</td><td>Combined total</td><td class="num">153</td><td class="num">226</td><td class="num">1,400</td><td class="num">578</td><td class="num">354</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="section-label">Course mix</div>
+      <h2>By event type</h2>
+      <table class="data">
+        <thead><tr><th>Type</th><th class="num">Events</th><th class="num">Trainer-days</th></tr></thead>
+        <tbody>
+          <tr><td><span class="ev-badge bec4">BEC4</span></td><td class="num">24</td><td class="num">480</td></tr>
+          <tr><td><span class="ev-badge bec2">BEC2</span></td><td class="num">24</td><td class="num">240</td></tr>
+          <tr><td><span class="ev-badge btot">BEC-TOT</span></td><td class="num">5</td><td class="num">50</td></tr>
+          <tr><td><span class="ev-badge ptot">EC P-TOT</span></td><td class="num">3</td><td class="num">45</td></tr>
+          <tr><td><span class="ev-badge dtot">D / MCM TOT</span></td><td class="num">3</td><td class="num">45</td></tr>
+          <tr><td><span class="ev-badge ml-dis">D Microlearning</span></td><td class="num">40</td><td class="num">20</td></tr>
+          <tr><td><span class="ev-badge ml-ec">EC Microlearning</span></td><td class="num">40</td><td class="num">20</td></tr>
+          <tr><td><span class="ev-badge drill">Drill</span></td><td class="num">6</td><td class="num">6</td></tr>
+          <tr><td><span class="ev-badge qi">QI Showcase</span></td><td class="num">6</td><td class="num">6</td></tr>
+          <tr><td><span class="ev-badge close-ec">EC Closing</span></td><td class="num">1</td><td class="num">10</td></tr>
+          <tr><td><span class="ev-badge close-dmc">D/MCM Closing</span></td><td class="num">1</td><td class="num">10</td></tr>
+          <tr class="total"><td>Total</td><td class="num">153</td><td class="num">932</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <div class="section-label">Combined view · all layers (summary pills)</div>
+  <h2>Monthly calendar</h2>
+  <div class="legend">
+    <span><span class="swatch" style="background:#96402B"></span>BEC4 (L1)</span>
+    <span><span class="swatch" style="background:#C99A3B"></span>BEC2 (L1)</span>
+    <span><span class="swatch" style="background:#4A6B4A"></span>BEC-TOT (L1)</span>
+    <span><span class="swatch" style="background:#1F77B4"></span>EC P-TOT (L2)</span>
+    <span><span class="swatch" style="background:#6F42C1"></span>D/MCM TOT (L2)</span>
+    <span><span class="swatch" style="background:#7A5C9C"></span>L3 hospital wk</span>
+    <span><span class="swatch" style="background:#B33A3A"></span>L3 culmination</span>
+    <span><span class="swatch" style="background:#96402B;border:1px solid #2B2B2B"></span>EC Closing (L4)</span>
+    <span><span class="swatch" style="background:#6F42C1;border:1px solid #2B2B2B"></span>D/MCM Closing (L4)</span>
+  </div>
+  <div class="months" id="months"></div>
+
+  <hr class="rule">
+
+  <div class="section-label">Detail · all events</div>
+  <h2>Full schedule</h2>
+  <div class="controls">
+    <label><input type="checkbox" data-layer="1" checked> Layer 1 (BEC base)</label>
+    <label><input type="checkbox" data-layer="2" checked> Layer 2 (Monthly P/D-TOT)</label>
+    <label><input type="checkbox" data-layer="3" checked> Layer 3 (Hospital microlearning)</label>
+    <label><input type="checkbox" data-layer="4" checked> Layer 4 (Closings)</label>
+  </div>
+  <div class="schedule-wrap">
+    <table class="sched" id="sched-table">
+      <thead>
+        <tr>
+          <th>Layer</th>
+          <th>Week</th>
+          <th>Month</th>
+          <th>Date</th>
+          <th>Event</th>
+          <th>Entity / Hospital</th>
+          <th>Days</th>
+          <th>Trainers</th>
+          <th class="num">Trainer-days</th>
+        </tr>
+      </thead>
+      <tbody id="sched-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    <span>Emergency Care + Disaster Preparedness Program · Combined view · Layers 1 + 2 + 3 + 4 active</span>
+    <span>v4 · WHO Country Office Egypt · 2026</span>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const ENTITIES = ["EHA", "SMC", "PHC", "EAO", "Zamala", "MOH"];
+  const START = new Date(Date.UTC(2026, 5, 14));
+  const MONTHS_ABBR = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const ACTIVE_WEEKS = 24;
+
+  function addDays(d, n){ const r = new Date(d); r.setUTCDate(r.getUTCDate()+n); return r; }
+  function fmt(d){ return String(d.getUTCDate()).padStart(2,'0') + '-' + MONTHS_ABBR[d.getUTCMonth()]; }
+  function weekSun(w){ return addDays(START, (w-1)*7); }
+  function weekThu(w){ return addDays(weekSun(w), 4); }
+
+  function bec_pair(w){
+    const cycleIdx = ((w-1) % 6);
+    const pairIdx = Math.floor(cycleIdx % 3);
+    const e1 = ENTITIES[pairIdx*2];
+    const e2 = ENTITIES[pairIdx*2 + 1];
+    const swap = cycleIdx >= 3;
+    return [
+      { type: swap ? 'BEC2' : 'BEC4', entity: e1, days: swap ? 2 : 4 },
+      { type: swap ? 'BEC4' : 'BEC2', entity: e2, days: swap ? 4 : 2 },
+    ];
+  }
+  // Trainer-days = 5 trainers × days for L1/L2 (3M+2L)
+  // For L3: 1 trainer × days
+  // For L4: 10 trainers × 1 day = 10
+  const TDAYS = {BEC4: 20, BEC2: 10, 'BEC-TOT': 10, 'EC P-TOT': 15, 'D / MCM TOT': 15,
+                 'D Microlearning': 0.5, 'EC Microlearning': 0.5,
+                 'Drill (implementation)': 1, 'QI Showcase': 1,
+                 'EC Program Closing': 10, 'D/MCM Program Closing': 10};
+  const events = [];
+
+  for (let w = 1; w <= ACTIVE_WEEKS; w++){
+    const month = Math.ceil(w/4);
+    const sun = weekSun(w);
+    const [a, b] = bec_pair(w);
+    events.push({layer:1, week:w, month, type:a.type, target:a.entity, days:a.days, dateLabel: fmt(sun), tdays: TDAYS[a.type]});
+    events.push({layer:1, week:w, month, type:b.type, target:b.entity, days:b.days, dateLabel: fmt(sun), tdays: TDAYS[b.type]});
+    if (((w-1) % 4 === 0) && (w !== 1)) {
+      const wed = addDays(sun, 3);
+      events.push({layer:1, week:w, month, type:'BEC-TOT', target:'National', days:2, dateLabel: fmt(wed) + ' (Wed–Thu)', tdays: TDAYS['BEC-TOT']});
+    }
+  }
+
+  for (let m = 1; m <= 6; m++){
+    const week = (m-1)*4 + 3;
+    const sun = weekSun(week);
+    const tue = addDays(sun, 2);
+    const isP = (m % 2 === 1);
+    const type = isP ? 'EC P-TOT' : 'D / MCM TOT';
+    events.push({
+      layer:2, week, month: m,
+      type, target: 'National', days: 3,
+      dateLabel: fmt(tue) + ' – ' + fmt(addDays(sun,4)) + ' (Tue–Thu)',
+      tdays: TDAYS[type]
+    });
+  }
+
+  // Phase-in: C1 starts W3 (2-week prep), C3 shortened to 7 weeks
+  const cohorts = [
+    {num: 1, startW: 3,  endW: 10, hospitals: [
+      {id:'D-Hospital 1', track:'D'}, {id:'D-Hospital 2', track:'D'},
+      {id:'E-Hospital 1', track:'E'}, {id:'E-Hospital 2', track:'E'}]},
+    {num: 2, startW: 11, endW: 18, hospitals: [
+      {id:'D-Hospital 3', track:'D'}, {id:'D-Hospital 4', track:'D'},
+      {id:'E-Hospital 3', track:'E'}, {id:'E-Hospital 4', track:'E'}]},
+    {num: 3, startW: 19, endW: 25, hospitals: [
+      {id:'D-Hospital 5', track:'D'}, {id:'D-Hospital 6', track:'D'},
+      {id:'E-Hospital 5', track:'E'}, {id:'E-Hospital 6', track:'E'}]},
+  ];
+  cohorts.forEach(c => {
+    for (let w = c.startW; w <= c.endW; w++){
+      c.hospitals.forEach(h => {
+        const isLast = (w === c.endW);
+        const thu = weekThu(w);
+        const month = Math.ceil(w/4);
+        if (isLast) {
+          const label = h.track === 'D' ? 'Drill (implementation)' : 'QI Showcase';
+          events.push({layer:3, week:w, month, type: label, target: h.id, days: 1, dateLabel: fmt(thu) + ' (Thu)', tdays: TDAYS[label]});
+        } else {
+          const label = h.track === 'D' ? 'D Microlearning' : 'EC Microlearning';
+          events.push({layer:3, week:w, month, type: label, target: h.id, days: 0.5, dateLabel: fmt(thu) + ' (Thu, ½d)', tdays: TDAYS[label]});
+        }
+      });
+    }
+  });
+
+  const ecCloseThu = weekThu(26);
+  const dmcCloseThu = weekThu(27);
+  events.push({layer:4, week:26, month:7, type: 'EC Program Closing', target: 'National', days: 1, dateLabel: fmt(ecCloseThu) + ' (Thu)', tdays: TDAYS['EC Program Closing']});
+  events.push({layer:4, week:27, month:7, type: 'D/MCM Program Closing', target: 'National', days: 1, dateLabel: fmt(dmcCloseThu) + ' (Thu)', tdays: TDAYS['D/MCM Program Closing']});
+
+  events.sort((x,y) => x.week - y.week || x.layer - y.layer);
+
+  function typeCls(t){
+    if (t === 'BEC4') return 'bec4';
+    if (t === 'BEC2') return 'bec2';
+    if (t === 'BEC-TOT') return 'btot';
+    if (t === 'EC P-TOT') return 'ptot';
+    if (t === 'D / MCM TOT') return 'dtot';
+    if (t === 'EC Program Closing') return 'close-ec';
+    if (t === 'D/MCM Program Closing') return 'close-dmc';
+    return 'l3-ml';
+  }
+  function typeLabel(t){
+    if (t === 'BEC-TOT') return 'BEC-TOT';
+    if (t === 'EC P-TOT') return 'P-TOT';
+    if (t === 'D / MCM TOT') return 'D-TOT';
+    if (t === 'EC Program Closing') return 'EC CLOSING';
+    if (t === 'D/MCM Program Closing') return 'D/MCM CLOSING';
+    return t;
+  }
+  const monthsEl = document.getElementById('months');
+  function renderMonthCard(label, firstW, lastW, sub){
+    const card = document.createElement('div');
+    card.className = 'month-card';
+    card.innerHTML = `<div class="month-title">${label}</div><div class="month-sub">${sub}</div>`;
+    for (let w = firstW; w <= lastW; w++){
+      const wkEv = events.filter(e => e.week === w);
+      const row = document.createElement('div');
+      row.className = 'week-row';
+
+      const named = wkEv.filter(e => e.layer === 1 || e.layer === 2 || e.layer === 4);
+      const pills_named = named.map(e => {
+        const cls = typeCls(e.type);
+        return `<span class="pill ${cls}">${typeLabel(e.type)}<span class="ent">· ${e.target}</span></span>`;
+      }).join('');
+
+      const l3Ev = wkEv.filter(e => e.layer === 3);
+      const culm = l3Ev.filter(e => e.type === 'Drill (implementation)' || e.type === 'QI Showcase');
+      const ml = l3Ev.filter(e => !culm.includes(e));
+      let pills_l3 = '';
+      if (ml.length > 0) {
+        const cohort = cohorts.find(c => w >= c.startW && w <= c.endW);
+        pills_l3 += `<span class="pill l3-ml">L3 · ${ml.length} hospital ½d<span class="ent">· C${cohort.num}</span></span>`;
+      }
+      if (culm.length > 0) {
+        const dCount = culm.filter(e => e.type === 'Drill (implementation)').length;
+        const qCount = culm.filter(e => e.type === 'QI Showcase').length;
+        pills_l3 += `<span class="pill l3-end">L3 culmination · ${dCount} drill + ${qCount} QI</span>`;
+      }
+
+      row.innerHTML = `<div class="week-num">W${w}</div><div class="events">${pills_named}${pills_l3}</div>`;
+      card.appendChild(row);
+    }
+    monthsEl.appendChild(card);
+  }
+
+  for (let m = 1; m <= 6; m++){
+    const firstW = (m-1)*4 + 1;
+    const firstSun = weekSun(firstW);
+    const lastEnd  = addDays(weekSun(firstW+3), 4);
+    renderMonthCard(`Month ${m}`, firstW, firstW+3,
+      `${fmt(firstSun)} – ${fmt(lastEnd)} · Weeks ${firstW}–${firstW+3}`);
+  }
+  const wdStart = weekSun(25);
+  const wdEnd = addDays(weekSun(27), 4);
+  renderMonthCard('Wind-down', 25, 27,
+    `${fmt(wdStart)} – ${fmt(wdEnd)} · Weeks 25–27 · Closings only`);
+
+  const tbody = document.getElementById('sched-tbody');
+  function evBadgeCls(e){
+    if (e.layer === 1){ if (e.type === 'BEC4') return 'bec4'; if (e.type === 'BEC2') return 'bec2'; return 'btot'; }
+    if (e.layer === 2){ return e.type === 'EC P-TOT' ? 'ptot' : 'dtot'; }
+    if (e.layer === 3){
+      if (e.type === 'D Microlearning') return 'ml-dis';
+      if (e.type === 'EC Microlearning') return 'ml-ec';
+      if (e.type === 'Drill (implementation)') return 'drill';
+      return 'qi';
+    }
+    if (e.layer === 4){ return e.type === 'EC Program Closing' ? 'close-ec' : 'close-dmc'; }
+  }
+  function trainersFor(e){
+    if (e.layer === 3) return '1M + champions';
+    if (e.layer === 4) return '5M + 5L';
+    return '3M + 2L';
+  }
+  function render(){
+    const activeLayers = new Set(
+      Array.from(document.querySelectorAll('.controls input:checked')).map(i => parseInt(i.dataset.layer))
+    );
+    tbody.innerHTML = '';
+    events.filter(e => activeLayers.has(e.layer)).forEach(e => {
+      const cls = evBadgeCls(e);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="layer-tag-cell">L${e.layer}</td>
+        <td>W${e.week}</td>
+        <td>M${e.month}</td>
+        <td>${e.dateLabel}</td>
+        <td><span class="ev-badge ${cls}">${e.type}</span></td>
+        <td>${e.target}</td>
+        <td>${e.days}</td>
+        <td>${trainersFor(e)}</td>
+        <td class="num">${e.tdays}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+  document.querySelectorAll('.controls input').forEach(i => i.addEventListener('change', render));
+  render();
+
+})();
+</script>
+<script src="assets/nav.js"></script>
+</body>
+</html>

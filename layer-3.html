@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="assets/shared.css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Layer 3 — Hospital Microlearning & Culmination</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Helvetica Neue', Arial, sans-serif; background: #F8F4ED; color: #1A1A1A; font-size: 14px; line-height: 1.5; }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 28px 32px 64px; }
+  .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #C75B3C; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+  .eyebrow::before { content: ''; width: 24px; height: 2px; background: #C75B3C; }
+  h1 { font-family: Georgia, serif; font-size: 36px; font-weight: 700; color: #2B2B2B; margin: 0 0 6px; letter-spacing: -0.5px; }
+  .lede { font-family: Georgia, serif; font-style: italic; font-size: 16px; color: #6E6E6E; max-width: 880px; }
+  hr.rule { border: 0; height: 1px; background: #D8D0C2; margin: 28px 0; }
+  h2 { font-family: Georgia, serif; font-size: 22px; color: #2B2B2B; margin: 0 0 16px; font-weight: 700; }
+  .section-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #C75B3C; margin-bottom: 4px; }
+  .rules { background: #EFE9DD; border-left: 4px solid #C75B3C; padding: 18px 22px; margin: 24px 0 32px; }
+  .rules h3 { font-family: Georgia, serif; margin: 0 0 10px; font-size: 15px; color: #2B2B2B; text-transform: uppercase; letter-spacing: 1px; }
+  .rules ul { margin: 0; padding-left: 18px; }
+  .rules li { margin-bottom: 4px; }
+  .layer-tag { display: inline-block; background: #2B2B2B; color: #FFFFFF; padding: 3px 10px; border-radius: 12px; font-size: 10.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+
+  .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 32px; }
+  .kpi { background: #FFFFFF; border: 1px solid #D8D0C2; border-top: 3px solid #C75B3C; padding: 16px 18px; min-height: 96px; }
+  .kpi-label { font-size: 9.5px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; color: #6E6E6E; margin-bottom: 8px; }
+  .kpi-value { font-family: Georgia, serif; font-size: 26px; font-weight: 700; color: #2B2B2B; line-height: 1; }
+  .kpi-sub { font-size: 11px; color: #6E6E6E; margin-top: 6px; font-style: italic; }
+  .kpi.mustard { border-top-color: #C99A3B; }
+  .kpi.forest  { border-top-color: #4A6B4A; }
+  .kpi.dark    { border-top-color: #96402B; }
+  .kpi.purple  { border-top-color: #6F42C1; }
+  .kpi.red     { border-top-color: #B33A3A; }
+
+  table.data { width: 100%; border-collapse: collapse; background: #FFFFFF; border: 1px solid #D8D0C2; font-size: 12.5px; }
+  table.data th { background: #2B2B2B; color: #FFFFFF; text-align: left; padding: 9px 12px; font-weight: 700; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.8px; }
+  table.data td { padding: 8px 12px; border-top: 1px solid #EFE9DD; }
+  table.data tr:nth-child(even) td { background: #FCFAF5; }
+  table.data td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  table.data tr.total td { background: #EFE9DD; font-weight: 700; }
+
+  .cohorts { display: grid; grid-template-columns: 1fr; gap: 14px; margin-bottom: 32px; }
+  .cohort-card { background: #FFFFFF; border: 1px solid #D8D0C2; padding: 16px 18px; }
+  .cohort-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #EFE9DD; }
+  .cohort-num { font-family: Georgia, serif; font-size: 24px; font-weight: 700; color: #C75B3C; background: #EFE9DD; padding: 4px 14px; border-radius: 2px; min-width: 70px; text-align: center; }
+  .cohort-title { font-family: Georgia, serif; font-weight: 700; color: #2B2B2B; font-size: 16px; }
+  .cohort-sub { font-size: 12px; color: #6E6E6E; margin-top: 2px; }
+  .cohort-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .track { border: 1px solid #D8D0C2; padding: 12px 14px; background: #FCFAF5; }
+  .track.disaster { border-left: 4px solid #6F42C1; }
+  .track.ec       { border-left: 4px solid #96402B; }
+  .track-label { font-size: 9.5px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 6px; }
+  .track.disaster .track-label { color: #6F42C1; }
+  .track.ec .track-label       { color: #96402B; }
+  .track-title { font-family: Georgia, serif; font-weight: 700; color: #2B2B2B; font-size: 13.5px; margin-bottom: 8px; }
+  .track-hospital { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; font-size: 12px; border-top: 1px dashed #E4DCC9; }
+  .track-hospital:first-of-type { border-top: 0; }
+  .track-hospital .hname { font-weight: 600; }
+  .track-hospital .hweeks { color: #6E6E6E; font-size: 11px; }
+  .track-end { margin-top: 10px; padding-top: 8px; border-top: 1px dashed #E4DCC9; font-size: 11px; color: #6E6E6E; }
+  .track-end strong { color: #2B2B2B; font-weight: 700; }
+
+  .timeline-wrap { margin-bottom: 32px; }
+  .timeline { background: #FFFFFF; border: 1px solid #D8D0C2; padding: 18px 18px; }
+  .week-axis { display: grid; grid-template-columns: repeat(24, 1fr); gap: 2px; margin-bottom: 6px; }
+  .week-axis .w { font-size: 9px; color: #6E6E6E; text-align: center; border-bottom: 1px solid #EFE9DD; padding-bottom: 4px; }
+  .timeline-row { margin-bottom: 6px; }
+  .tl-label { font-size: 10.5px; font-weight: 700; color: #6E6E6E; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 3px; }
+  .tl-bar { display: grid; grid-template-columns: repeat(24, 1fr); gap: 2px; height: 22px; }
+  .tl-cell { background: #F2EDDF; }
+  .tl-cell.active.dis { background: #6F42C1; }
+  .tl-cell.active.ec  { background: #96402B; }
+  .tl-cell.end { background: #4A6B4A; border: 1px solid #2B2B2B; }
+
+  .schedule-wrap { background: #FFFFFF; border: 1px solid #D8D0C2; padding: 0; max-height: 480px; overflow: auto; }
+  table.sched { width: 100%; border-collapse: collapse; font-size: 12px; }
+  table.sched th { background: #2B2B2B; color: #FFFFFF; padding: 9px 10px; text-align: left; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; position: sticky; top: 0; }
+  table.sched td { padding: 7px 10px; border-top: 1px solid #EFE9DD; font-size: 12px; }
+  table.sched tr:nth-child(even) td { background: #FCFAF5; }
+  table.sched td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .ev-badge { display: inline-block; padding: 2px 8px; border-radius: 2px; font-size: 10.5px; font-weight: 700; color: #FFFFFF; }
+  .ev-badge.ml-dis { background: #6F42C1; }
+  .ev-badge.ml-ec  { background: #96402B; }
+  .ev-badge.drill  { background: #4A6B4A; }
+  .ev-badge.qi     { background: #B33A3A; }
+
+  .twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 11.5px; color: #6E6E6E; margin-bottom: 12px; }
+  .legend .swatch { display: inline-block; width: 12px; height: 12px; vertical-align: middle; margin-right: 6px; }
+  .footer { border-top: 1px solid #D8D0C2; margin-top: 36px; padding-top: 14px; font-size: 11px; color: #6E6E6E; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body data-nav="micro">
+<div class="wrap">
+
+  <div class="layer-tag">Layer 03</div>
+  <div class="eyebrow">Hospital-based microlearning &amp; culmination</div>
+  <h1>Hospital Microlearning</h1>
+  <p class="lede">Eight-week microlearning at four hospitals in parallel — two on the Disaster / MCM track and two on the Emergency Care track. Each cohort culminates in a hospital-led drill or a Quality Improvement project showcase, then shifts to four new hospitals.</p>
+
+  <div class="rules">
+    <h3>Rules of this layer</h3>
+    <ul>
+      <li><strong>4 hospitals per 8-week cohort</strong> — 2 on Disaster/MCM, 2 on Emergency Care</li>
+      <li><strong>Weekly rhythm per hospital</strong> — 1 half-day microlearning session (Thu, in parallel across hospitals)</li>
+      <li><strong>Week 8 culmination</strong> — Disaster/MCM hospitals run an <em>implementation + drill</em>; EC hospitals showcase a <em>quality-improvement project</em> (each 1 full day)</li>
+      <li><strong>Trainer model</strong> — 1 Master Trainer per hospital per session + group of in-hospital champions (champions = hospital staff, not part of trainer pool)</li>
+      <li><strong>Cohort rotation</strong> — after each 8-week cohort, shift to 4 brand-new hospitals</li>
+      <li><strong>6-month output</strong> — 3 cohorts · 12 unique hospitals · 80 microlearning sessions · 12 culmination events · (Phase-in: C1 starts W3; C3 is 7 wks)</li>
+    </ul>
+  </div>
+
+  <div class="section-label">Snapshot · 6 months</div>
+  <h2>Layer 3 KPIs</h2>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">Hospital cohorts</div><div class="kpi-value">3</div><div class="kpi-sub">8 weeks each</div></div>
+    <div class="kpi purple"><div class="kpi-label">Unique hospitals</div><div class="kpi-value">12</div><div class="kpi-sub">4 per cohort · 6 D + 6 EC</div></div>
+    <div class="kpi mustard"><div class="kpi-label">Microlearning sessions</div><div class="kpi-value">80</div><div class="kpi-sub">C1 + C2: 7 wks × 4 hosp · C3: 6 wks × 4 hosp</div></div>
+    <div class="kpi forest"><div class="kpi-label">Culmination events</div><div class="kpi-value">12</div><div class="kpi-sub">6 drills + 6 QI showcases</div></div>
+    <div class="kpi dark"><div class="kpi-label">Champions reached</div><div class="kpi-value">120</div><div class="kpi-sub">10 per hospital × 12 hosp.</div></div>
+  </div>
+
+  <hr class="rule">
+
+  <div class="section-label">Cohort rotation</div>
+  <h2>Three cohorts, twelve hospitals</h2>
+  <div class="cohorts" id="cohorts"></div>
+
+  <div class="section-label">Visual timeline · all 4 hospital streams across 24 weeks</div>
+  <h2>Six-month hospital coverage</h2>
+  <div class="legend">
+    <span><span class="swatch" style="background:#6F42C1"></span>Disaster/MCM hospital (microlearning week)</span>
+    <span><span class="swatch" style="background:#96402B"></span>EC hospital (microlearning week)</span>
+    <span><span class="swatch" style="background:#4A6B4A"></span>Week 8 culmination</span>
+  </div>
+  <div class="timeline" id="timeline"></div>
+
+  <hr class="rule">
+
+  <div class="twocol">
+    <div>
+      <div class="section-label">Trainer demand</div>
+      <h2>Trainer-day breakdown</h2>
+      <table class="data">
+        <thead><tr><th>Line item</th><th class="num">Master-days</th><th class="num">Local-days</th><th class="num">Trainer-days</th></tr></thead>
+        <tbody>
+          <tr><td>Microlearning — 80 × 1M × ½d</td><td class="num">40</td><td class="num">—</td><td class="num">40</td></tr>
+          <tr><td>Culmination — 12 × 1M × 1d</td><td class="num">12</td><td class="num">—</td><td class="num">12</td></tr>
+          <tr class="total"><td>Hospital Microlearning total</td><td class="num">52</td><td class="num">0</td><td class="num">52</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:11px; color:#6E6E6E; font-style:italic; margin-top:8px">Champions are hospital staff (not part of trainer pool).</div>
+    </div>
+    <div>
+      <div class="section-label">By track</div>
+      <h2>Disaster vs. EC tracks</h2>
+      <table class="data">
+        <thead><tr><th>Track</th><th class="num">Hospitals</th><th class="num">Microlearning</th><th class="num">Culmination</th><th class="num">Trainees</th></tr></thead>
+        <tbody>
+          <tr><td><span class="ev-badge ml-dis">Disaster / MCM</span></td><td class="num">6</td><td class="num">40</td><td class="num">6 drills</td><td class="num">60</td></tr>
+          <tr><td><span class="ev-badge ml-ec">Emergency Care</span></td><td class="num">6</td><td class="num">40</td><td class="num">6 QI showcases</td><td class="num">60</td></tr>
+          <tr class="total"><td>Total</td><td class="num">12</td><td class="num">80</td><td class="num">12</td><td class="num">120</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <div class="section-label">Detail · all events</div>
+  <h2>Full schedule</h2>
+  <div class="schedule-wrap">
+    <table class="sched" id="sched-table">
+      <thead>
+        <tr>
+          <th>Cohort</th>
+          <th>Week</th>
+          <th>Date (Thu)</th>
+          <th>Track</th>
+          <th>Hospital</th>
+          <th>Event</th>
+          <th>Days</th>
+          <th>Trainers</th>
+          <th class="num">Trainer-days</th>
+        </tr>
+      </thead>
+      <tbody id="sched-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    <span>Emergency Care + Disaster Preparedness Program · Layer 3 · Hospital Microlearning</span>
+    <span>v2 · WHO Country Office Egypt · 2026</span>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const START = new Date(Date.UTC(2026, 5, 14));
+  const MONTHS_ABBR = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+  function addDays(d, n){ const r = new Date(d); r.setUTCDate(r.getUTCDate()+n); return r; }
+  function fmt(d){ return String(d.getUTCDate()).padStart(2,'0') + '-' + MONTHS_ABBR[d.getUTCMonth()]; }
+  function weekSun(w){ return addDays(START, (w-1)*7); }
+  function weekThu(w){ return addDays(weekSun(w), 4); }
+
+  // Phase-in: C1 starts W3 (2-week prep), C3 shortened to 7 weeks (W19-W25) to clear W26-W27 for closings
+  const cohorts = [
+    { num: 1, startW: 3,  endW: 10, weeks: 8,
+      disaster: [{name: "D-Hospital 1", id: "D1"}, {name: "D-Hospital 2", id: "D2"}],
+      ec:       [{name: "E-Hospital 1", id: "E1"}, {name: "E-Hospital 2", id: "E2"}] },
+    { num: 2, startW: 11, endW: 18, weeks: 8,
+      disaster: [{name: "D-Hospital 3", id: "D3"}, {name: "D-Hospital 4", id: "D4"}],
+      ec:       [{name: "E-Hospital 3", id: "E3"}, {name: "E-Hospital 4", id: "E4"}] },
+    { num: 3, startW: 19, endW: 25, weeks: 7,
+      disaster: [{name: "D-Hospital 5", id: "D5"}, {name: "D-Hospital 6", id: "D6"}],
+      ec:       [{name: "E-Hospital 5", id: "E5"}, {name: "E-Hospital 6", id: "E6"}] },
+  ];
+
+  const cohortsEl = document.getElementById('cohorts');
+  cohorts.forEach(c => {
+    const startDate = weekSun(c.startW);
+    const endDate = addDays(weekSun(c.endW), 4);
+    const card = document.createElement('div');
+    card.className = 'cohort-card';
+
+    const disasterRows = c.disaster.map(h => `
+      <div class="track-hospital"><span class="hname">${h.name}</span><span class="hweeks">W${c.startW}–W${c.endW}</span></div>
+    `).join('');
+    const ecRows = c.ec.map(h => `
+      <div class="track-hospital"><span class="hname">${h.name}</span><span class="hweeks">W${c.startW}–W${c.endW}</span></div>
+    `).join('');
+
+    card.innerHTML = `
+      <div class="cohort-header">
+        <div class="cohort-num">C${c.num}</div>
+        <div>
+          <div class="cohort-title">Cohort ${c.num}</div>
+          <div class="cohort-sub">${fmt(startDate)} – ${fmt(endDate)} · Weeks ${c.startW}–${c.endW} · ${c.weeks-1} weekly half-days then culmination</div>
+        </div>
+      </div>
+      <div class="cohort-grid">
+        <div class="track disaster">
+          <div class="track-label">Disaster / MCM</div>
+          <div class="track-title">2 hospitals → drill in Week 8</div>
+          ${disasterRows}
+          <div class="track-end">Culmination · <strong>Implementation + Drill</strong> · Week ${c.endW}</div>
+        </div>
+        <div class="track ec">
+          <div class="track-label">Emergency Care</div>
+          <div class="track-title">2 hospitals → QI showcase in Week 8</div>
+          ${ecRows}
+          <div class="track-end">Culmination · <strong>Quality Improvement Showcase</strong> · Week ${c.endW}</div>
+        </div>
+      </div>
+    `;
+    cohortsEl.appendChild(card);
+  });
+
+  const timelineEl = document.getElementById('timeline');
+  let axis = '<div class="week-axis">';
+  for (let w = 1; w <= 24; w++) axis += `<div class="w">W${w}</div>`;
+  axis += '</div>';
+  timelineEl.innerHTML = axis;
+
+  const slots = [
+    {label: "Disaster slot A", type: 'dis', getId: c => c.disaster[0].id},
+    {label: "Disaster slot B", type: 'dis', getId: c => c.disaster[1].id},
+    {label: "EC slot A",       type: 'ec',  getId: c => c.ec[0].id},
+    {label: "EC slot B",       type: 'ec',  getId: c => c.ec[1].id},
+  ];
+  slots.forEach(slot => {
+    const row = document.createElement('div');
+    row.className = 'timeline-row';
+    let cells = `<div class="tl-label">${slot.label}</div><div class="tl-bar">`;
+    for (let w = 1; w <= 24; w++) {
+      const cohort = cohorts.find(c => w >= c.startW && w <= c.endW);
+      const isEndWeek = cohort && (w === cohort.endW);
+      if (isEndWeek) {
+        cells += `<div class="tl-cell end" title="Cohort ${cohort.num} culmination — ${slot.getId(cohort)}">●</div>`;
+      } else if (cohort) {
+        cells += `<div class="tl-cell active ${slot.type}" title="W${w} — ${slot.getId(cohort)}"></div>`;
+      } else {
+        cells += `<div class="tl-cell"></div>`;
+      }
+    }
+    cells += '</div>';
+    row.innerHTML = cells;
+    timelineEl.appendChild(row);
+  });
+
+  const tbody = document.getElementById('sched-tbody');
+  cohorts.forEach(c => {
+    const allHospitals = [
+      {...c.disaster[0], track: 'D'},
+      {...c.disaster[1], track: 'D'},
+      {...c.ec[0],       track: 'E'},
+      {...c.ec[1],       track: 'E'},
+    ];
+    for (let w = c.startW; w <= c.endW; w++){
+      allHospitals.forEach(h => {
+        const isLastWeek = (w === c.endW);
+        const dateLbl = fmt(weekThu(w));
+        let evLabel, evCls, days, trainerDays;
+        if (isLastWeek) {
+          if (h.track === 'D') { evLabel = 'Implementation + Drill'; evCls = 'drill'; days = 1; trainerDays = 1; }
+          else { evLabel = 'QI Project Showcase'; evCls = 'qi'; days = 1; trainerDays = 1; }
+        } else {
+          evLabel = 'Microlearning (½ day)';
+          evCls = h.track === 'D' ? 'ml-dis' : 'ml-ec';
+          days = 0.5; trainerDays = 0.5;
+        }
+        const trackBadge = h.track === 'D' ? '<span class="ev-badge ml-dis">D / MCM</span>' : '<span class="ev-badge ml-ec">EC</span>';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>C${c.num}</td>
+          <td>W${w}</td>
+          <td>${dateLbl}</td>
+          <td>${trackBadge}</td>
+          <td>${h.name}</td>
+          <td><span class="ev-badge ${evCls}">${evLabel}</span></td>
+          <td>${days}</td>
+          <td>1M + champions</td>
+          <td class="num">${trainerDays}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+  });
+
+})();
+</script>
+<script src="assets/nav.js"></script>
+</body>
+</html>

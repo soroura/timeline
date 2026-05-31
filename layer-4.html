@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="assets/shared.css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Layer 4 — Program Closings</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Helvetica Neue', Arial, sans-serif; background: #F8F4ED; color: #1A1A1A; font-size: 14px; line-height: 1.5; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 28px 32px 64px; }
+  .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #C75B3C; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+  .eyebrow::before { content: ''; width: 24px; height: 2px; background: #C75B3C; }
+  h1 { font-family: Georgia, serif; font-size: 36px; font-weight: 700; color: #2B2B2B; margin: 0 0 6px; letter-spacing: -0.5px; }
+  .lede { font-family: Georgia, serif; font-style: italic; font-size: 16px; color: #6E6E6E; max-width: 840px; }
+  hr.rule { border: 0; height: 1px; background: #D8D0C2; margin: 28px 0; }
+  h2 { font-family: Georgia, serif; font-size: 22px; color: #2B2B2B; margin: 0 0 16px; font-weight: 700; }
+  .section-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #C75B3C; margin-bottom: 4px; }
+  .rules { background: #EFE9DD; border-left: 4px solid #C75B3C; padding: 18px 22px; margin: 24px 0 32px; }
+  .rules h3 { font-family: Georgia, serif; margin: 0 0 10px; font-size: 15px; color: #2B2B2B; text-transform: uppercase; letter-spacing: 1px; }
+  .rules ul { margin: 0; padding-left: 18px; }
+  .rules li { margin-bottom: 4px; }
+  .layer-tag { display: inline-block; background: #2B2B2B; color: #FFFFFF; padding: 3px 10px; border-radius: 12px; font-size: 10.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px; }
+  .kpi { background: #FFFFFF; border: 1px solid #D8D0C2; border-top: 3px solid #C75B3C; padding: 16px 18px; min-height: 96px; }
+  .kpi-label { font-size: 9.5px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; color: #6E6E6E; margin-bottom: 8px; }
+  .kpi-value { font-family: Georgia, serif; font-size: 28px; font-weight: 700; color: #2B2B2B; line-height: 1; }
+  .kpi-sub { font-size: 11px; color: #6E6E6E; margin-top: 6px; font-style: italic; }
+  .kpi.terra   { border-top-color: #C75B3C; }
+  .kpi.purple  { border-top-color: #6F42C1; }
+  .kpi.mustard { border-top-color: #C99A3B; }
+
+  .event-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 32px; }
+  .ev-card { background: #FFFFFF; border: 1px solid #D8D0C2; padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+  .ev-banner { padding: 24px 26px 22px; color: #FFFFFF; }
+  .ev-banner.ec  { background: #96402B; }
+  .ev-banner.dmc { background: #6F42C1; }
+  .ev-tag { font-size: 9.5px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; opacity: 0.85; margin-bottom: 6px; }
+  .ev-title { font-family: Georgia, serif; font-size: 24px; font-weight: 700; line-height: 1.15; }
+  .ev-date { margin-top: 14px; font-family: Georgia, serif; font-style: italic; font-size: 14px; opacity: 0.92; }
+  .ev-body { padding: 20px 26px 24px; flex: 1; display: flex; flex-direction: column; }
+  .ev-row { display: grid; grid-template-columns: 110px 1fr; padding: 8px 0; border-bottom: 1px dashed #E4DCC9; font-size: 12.5px; }
+  .ev-row:last-of-type { border-bottom: 0; }
+  .ev-row .k { font-size: 9.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #9A9080; padding-top: 2px; }
+  .ev-row .v { color: #1A1A1A; }
+  .ev-purpose { font-style: italic; font-family: Georgia, serif; color: #6E6E6E; font-size: 12.5px; padding: 14px 16px; background: #FCFAF5; border-left: 3px solid #C75B3C; margin-top: 16px; }
+
+  table.data { width: 100%; border-collapse: collapse; background: #FFFFFF; border: 1px solid #D8D0C2; font-size: 12.5px; }
+  table.data th { background: #2B2B2B; color: #FFFFFF; text-align: left; padding: 9px 12px; font-weight: 700; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.8px; }
+  table.data td { padding: 8px 12px; border-top: 1px solid #EFE9DD; }
+  table.data tr:nth-child(even) td { background: #FCFAF5; }
+  table.data td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  table.data tr.total td { background: #EFE9DD; font-weight: 700; }
+
+  .ev-badge { display: inline-block; padding: 2px 8px; border-radius: 2px; font-size: 10.5px; font-weight: 700; color: #FFFFFF; }
+  .ev-badge.ec  { background: #96402B; }
+  .ev-badge.dmc { background: #6F42C1; }
+
+  .footer { border-top: 1px solid #D8D0C2; margin-top: 36px; padding-top: 14px; font-size: 11px; color: #6E6E6E; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body data-nav="closing">
+<div class="wrap">
+
+  <div class="layer-tag">Layer 04</div>
+  <div class="eyebrow">Program closings · two flagship events</div>
+  <h1>Program Closings</h1>
+  <p class="lede">Two flagship national events that close the program — one for Emergency Care, one for Disaster / MCM. Each consolidates the six months of work into a single day of recognition, showcase, and forward-look with broader stakeholders.</p>
+
+  <div class="rules">
+    <h3>Rules of this layer</h3>
+    <ul>
+      <li><strong>Two events</strong> — one for each program track (EC and Disaster/MCM)</li>
+      <li><strong>1-day national</strong> — Thursday format, single-day flagship</li>
+      <li><strong>EC Closing</strong> — Thu 10-Dec-2026 (Week 26)</li>
+      <li><strong>D/MCM Closing</strong> — Thu 17-Dec-2026 (Week 27)</li>
+      <li><strong>Trainer / facilitator team</strong> — 5 Master + 5 Local (flagship scale)</li>
+      <li><strong>Attendees</strong> — 50 per event (broader stakeholder audience: senior officials, trainers, champions)</li>
+    </ul>
+  </div>
+
+  <div class="section-label">Snapshot</div>
+  <h2>Layer 4 KPIs</h2>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">Closing events</div><div class="kpi-value">2</div><div class="kpi-sub">EC + D/MCM</div></div>
+    <div class="kpi mustard"><div class="kpi-label">Total days</div><div class="kpi-value">2</div><div class="kpi-sub">1 day each, Thursdays</div></div>
+    <div class="kpi purple"><div class="kpi-label">Attendees</div><div class="kpi-value">100</div><div class="kpi-sub">50 per event</div></div>
+    <div class="kpi terra"><div class="kpi-label">Trainer team</div><div class="kpi-value">5M + 5L</div><div class="kpi-sub">Each event · 20 trainer-days</div></div>
+  </div>
+
+  <hr class="rule">
+
+  <div class="section-label">The two events</div>
+  <h2>Flagship closings</h2>
+  <div class="event-cards">
+
+    <div class="ev-card">
+      <div class="ev-banner ec">
+        <div class="ev-tag">Emergency Care Program</div>
+        <div class="ev-title">EC Program Closing</div>
+        <div class="ev-date">Thursday · 10 December 2026 · Week 26</div>
+      </div>
+      <div class="ev-body">
+        <div class="ev-row"><div class="k">Format</div><div class="v">1-day national event</div></div>
+        <div class="ev-row"><div class="k">Audience</div><div class="v">Senior EC officials, BEC + Process trainers, EC hospital champions, partner representatives</div></div>
+        <div class="ev-row"><div class="k">Trainers</div><div class="v">5 Master + 5 Local (flagship team) · 10 trainer-days</div></div>
+        <div class="ev-row"><div class="k">Attendees</div><div class="v">~50</div></div>
+        <div class="ev-row"><div class="k">Content</div><div class="v">6-month outcomes recap · trainer recognition · QI project highlights · forward-look for 2027</div></div>
+        <div class="ev-purpose">Marks the close of the EC scale-up — celebrates trainers and champions, surfaces what worked, and sets the trajectory for next year.</div>
+      </div>
+    </div>
+
+    <div class="ev-card">
+      <div class="ev-banner dmc">
+        <div class="ev-tag">Disaster / MCM Program</div>
+        <div class="ev-title">D / MCM Program Closing</div>
+        <div class="ev-date">Thursday · 17 December 2026 · Week 27</div>
+      </div>
+      <div class="ev-body">
+        <div class="ev-row"><div class="k">Format</div><div class="v">1-day national event</div></div>
+        <div class="ev-row"><div class="k">Audience</div><div class="v">Senior D/MCM officials, RES/MCM trainers, hospital champions, civil protection &amp; partners</div></div>
+        <div class="ev-row"><div class="k">Trainers</div><div class="v">5 Master + 5 Local (flagship team) · 10 trainer-days</div></div>
+        <div class="ev-row"><div class="k">Attendees</div><div class="v">~50</div></div>
+        <div class="ev-row"><div class="k">Content</div><div class="v">6-month outcomes recap · drill results showcase · resilience case studies · forward-look for 2027</div></div>
+        <div class="ev-purpose">Closes the D/MCM strand — anchors learnings from drills + resilience cohorts and locks in commitments from key partners.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="rule">
+
+  <div class="section-label">Summary</div>
+  <h2>Both events at a glance</h2>
+  <table class="data">
+    <thead>
+      <tr>
+        <th>Week</th>
+        <th>Date</th>
+        <th>Event</th>
+        <th>Audience</th>
+        <th>Trainers</th>
+        <th class="num">Trainer-days</th>
+        <th class="num">Attendees</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>W26</td><td>Thu 10-Dec</td>
+        <td><span class="ev-badge ec">EC Closing</span></td>
+        <td>EC trainers, champions, officials, partners</td>
+        <td>5M + 5L</td>
+        <td class="num">10</td>
+        <td class="num">50</td>
+      </tr>
+      <tr>
+        <td>W27</td><td>Thu 17-Dec</td>
+        <td><span class="ev-badge dmc">D / MCM Closing</span></td>
+        <td>D/MCM trainers, champions, officials, partners</td>
+        <td>5M + 5L</td>
+        <td class="num">10</td>
+        <td class="num">50</td>
+      </tr>
+      <tr class="total">
+        <td colspan="5">Layer 4 total</td>
+        <td class="num">20</td>
+        <td class="num">100</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <span>Emergency Care + Disaster Preparedness Program · Layer 4 · Program Closings</span>
+    <span>v2 · WHO Country Office Egypt · 2026</span>
+  </div>
+
+</div>
+<script src="assets/nav.js"></script>
+</body>
+</html>

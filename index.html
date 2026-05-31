@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EC + DP Timeline 2026 — Home</title>
+<link rel="stylesheet" href="assets/shared.css">
+<style>
+  .hero {
+    background: var(--charcoal); color: var(--white);
+    padding: 88px 32px 96px; position: relative; overflow: hidden;
+  }
+  .hero::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--terra); }
+  .hero-inner { max-width: 1320px; margin: 0 auto; }
+  .hero .small {
+    font-size: 10px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--terra);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 12px;
+  }
+  .hero .small::before { content: ''; width: 30px; height: 2px; background: var(--terra); }
+  .hero h1 {
+    font-family: Georgia, serif; font-size: 72px; font-weight: 700;
+    line-height: 1.05; color: var(--white);
+    margin: 0 0 8px; letter-spacing: -1.2px;
+  }
+  .hero h1 .accent { color: var(--terra); }
+  .hero .sub {
+    font-family: Georgia, serif; font-style: italic;
+    font-size: 22px; color: #C8C2B5; max-width: 780px;
+    margin: 16px 0 0;
+  }
+  .hero .when {
+    margin-top: 30px; display: inline-flex; align-items: center; gap: 14px;
+    font-size: 12px; color: var(--white);
+  }
+  .hero .when .pill {
+    background: var(--terra); padding: 6px 14px;
+    font-weight: 700; letter-spacing: 0.6px;
+  }
+
+  /* Two-program banner */
+  .programs-strip {
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--hairline);
+    padding: 18px 32px;
+  }
+  .programs-strip-inner {
+    max-width: 1320px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .program-band {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--bg-card); border: 1px solid var(--hairline);
+    padding: 14px 18px;
+    position: relative;
+  }
+  .program-band::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  }
+  .program-band.ec::before { background: var(--terra-d); }
+  .program-band.dp::before { background: var(--purple); }
+  .program-band .pl {
+    font-size: 9.5px; font-weight: 700;
+    letter-spacing: 1.4px; text-transform: uppercase;
+    color: var(--grey);
+  }
+  .program-band .pt {
+    font-family: Georgia, serif; font-size: 18px; font-weight: 700;
+    color: var(--charcoal); margin-top: 1px;
+  }
+  .program-band .stats {
+    margin-left: auto; display: flex; gap: 20px;
+  }
+  .program-band .stat {
+    font-family: Georgia, serif; font-size: 18px; font-weight: 700;
+    color: var(--charcoal);
+  }
+  .program-band .stat .l {
+    display: block; font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 9px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--grey);
+    margin-top: 1px;
+  }
+
+  /* Stat strip */
+  .stat-strip {
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--hairline);
+    padding: 22px 32px;
+  }
+  .stat-strip-inner {
+    max-width: 1320px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(6, 1fr);
+    gap: 24px;
+  }
+  .stat { border-left: 2px solid var(--terra); padding-left: 14px; }
+  .stat .v { font-family: Georgia, serif; font-size: 28px; font-weight: 700; color: var(--charcoal); line-height: 1; }
+  .stat .l { margin-top: 4px; font-size: 9.5px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; color: var(--grey); }
+  .stat .s { margin-top: 3px; font-size: 11px; color: var(--grey-soft); font-style: italic; }
+
+  section.body { max-width: 1320px; margin: 0 auto; padding: 56px 32px; }
+  section.body h2 { font-size: 26px; margin-bottom: 6px; }
+  section.body .lead {
+    font-family: Georgia, serif; font-style: italic;
+    color: var(--grey); margin: 0 0 28px; font-size: 15px;
+  }
+
+  /* Component cards */
+  .comp-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 18px; margin-bottom: 18px;
+  }
+  .comp-card {
+    background: var(--bg-card); border: 1px solid var(--hairline);
+    padding: 22px 24px; text-decoration: none; color: var(--ink);
+    display: flex; flex-direction: column;
+    transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
+    position: relative; overflow: hidden;
+  }
+  .comp-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--terra);
+  }
+  .comp-card:hover {
+    transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    border-color: var(--terra); text-decoration: none;
+  }
+  .comp-card .top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .comp-card .progbadge {
+    font-size: 9px; font-weight: 700; letter-spacing: 1.3px;
+    text-transform: uppercase;
+    padding: 4px 9px; color: var(--white);
+  }
+  .comp-card.bec .progbadge,
+  .comp-card.proc .progbadge,
+  .comp-card.ec-micro .progbadge,
+  .comp-card.qi .progbadge,
+  .comp-card.ec-close .progbadge { background: var(--terra-d); }
+  .comp-card.dtot .progbadge,
+  .comp-card.d-micro .progbadge,
+  .comp-card.drill .progbadge,
+  .comp-card.dp-close .progbadge { background: var(--purple); }
+  .comp-card.both .progbadge { background: linear-gradient(90deg, var(--terra-d) 50%, var(--purple) 50%); }
+
+  .comp-card.bec::before { background: var(--terra-d); }
+  .comp-card.both::before { background: linear-gradient(90deg, var(--terra-d) 50%, var(--purple) 50%); }
+  .comp-card.micro::before { background: linear-gradient(90deg, var(--terra-d) 50%, var(--purple) 50%); }
+  .comp-card.close::before { background: linear-gradient(90deg, var(--terra-d) 50%, var(--purple) 50%); }
+  .comp-card .tag {
+    font-size: 9.5px; font-weight: 700; letter-spacing: 1.3px;
+    text-transform: uppercase; color: var(--grey);
+    padding: 4px 10px; background: var(--bg-alt); border-radius: 12px;
+  }
+  .comp-card h3 {
+    font-family: Georgia, serif; font-size: 19px; color: var(--charcoal);
+    margin: 0 0 6px; font-weight: 700;
+  }
+  .comp-card p {
+    color: var(--grey); font-size: 13px; margin: 0 0 18px; flex: 1;
+  }
+  .comp-card .meta {
+    border-top: 1px dashed var(--hairline-soft); padding-top: 12px;
+    display: flex; gap: 18px; font-size: 11px; flex-wrap: wrap;
+  }
+  .comp-card .meta .m {
+    color: var(--charcoal); font-weight: 700;
+    font-family: Georgia, serif; font-size: 14px;
+  }
+  .comp-card .meta .l {
+    display: block; font-size: 9px; letter-spacing: 1.1px;
+    text-transform: uppercase; color: var(--grey); font-weight: 700;
+    margin-top: 2px;
+  }
+  .comp-card .go {
+    margin-top: 14px; font-size: 12px; color: var(--terra-d);
+    font-weight: 700; letter-spacing: 0.4px;
+  }
+  .comp-card .go::after { content: ' →'; }
+
+  /* Views section */
+  .views-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .view-card {
+    background: var(--bg-card); border: 1px solid var(--hairline);
+    padding: 28px 26px; text-decoration: none; color: var(--ink);
+    display: flex; gap: 16px; align-items: flex-start;
+    transition: transform 0.12s, box-shadow 0.12s;
+  }
+  .view-card:hover {
+    transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    text-decoration: none;
+  }
+  .view-card .icon {
+    background: var(--bg-alt); width: 48px; height: 48px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: Georgia, serif; font-size: 22px; font-weight: 700;
+    color: var(--terra);
+  }
+  .view-card h3 {
+    font-family: Georgia, serif;
+    margin: 0 0 4px; font-size: 17px; color: var(--charcoal);
+  }
+  .view-card p { margin: 0; font-size: 12.5px; color: var(--grey); }
+</style>
+</head>
+<body data-nav="home">
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="small">Emergency Care · Disaster Preparedness</div>
+      <h1>Integrated <span class="accent">capacity-building</span><br>program timeline.</h1>
+      <p class="sub">Two programs running in parallel — Emergency Care and Disaster Preparedness — across six entities and twelve hospitals over six months.</p>
+      <div class="when">
+        <span class="pill">14 JUN 2026 → 17 DEC 2026</span>
+        <span>· 27 weeks · 153 events · 1,400 trainees · phased-in start</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Two-program banner -->
+  <section class="programs-strip">
+    <div class="programs-strip-inner">
+      <div class="program-band ec">
+        <div>
+          <div class="pl">Program 1</div>
+          <div class="pt">Emergency Care</div>
+        </div>
+        <div class="stats">
+          <div class="stat">103<span class="l">Events</span></div>
+          <div class="stat">210<span class="l">Day-events</span></div>
+          <div class="stat">~1,080<span class="l">Trainees</span></div>
+        </div>
+      </div>
+      <div class="program-band dp">
+        <div>
+          <div class="pl">Program 2</div>
+          <div class="pt">Disaster Preparedness</div>
+        </div>
+        <div class="stats">
+          <div class="stat">50<span class="l">Events</span></div>
+          <div class="stat">56<span class="l">Day-events</span></div>
+          <div class="stat">~320<span class="l">Trainees</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KPI strip -->
+  <section class="stat-strip">
+    <div class="stat-strip-inner">
+      <div class="stat"><div class="v">153</div><div class="l">Events</div><div class="s">both programs</div></div>
+      <div class="stat"><div class="v">226</div><div class="l">Training days</div><div class="s">across program</div></div>
+      <div class="stat"><div class="v">1,400</div><div class="l">Trainees</div><div class="s">reached</div></div>
+      <div class="stat"><div class="v">12</div><div class="l">Hospitals</div><div class="s">in microlearning</div></div>
+      <div class="stat"><div class="v">6</div><div class="l">Entities</div><div class="s">in BEC rotation</div></div>
+      <div class="stat"><div class="v">932</div><div class="l">Trainer-days</div><div class="s">578M + 354L</div></div>
+    </div>
+  </section>
+
+  <!-- Body -->
+  <section class="body">
+    <div class="section-label">Four program components</div>
+    <h2>What runs through the six months</h2>
+    <p class="lead">Each component runs in parallel with the others. Click into any one to see its rules, schedule, and detail.</p>
+
+    <div class="comp-grid">
+      <a href="layer-1.html" class="comp-card bec">
+        <div class="top">
+          <div class="progbadge">EC</div>
+          <div class="tag">Foundation</div>
+        </div>
+        <h3>BEC Foundation</h3>
+        <p>Two BEC events per week — one full (4d), one hybrid (2d) — rotating across 6 entities. National BEC-TOT every Month except M1 (phase-in).</p>
+        <div class="meta">
+          <div><span class="m">53</span><span class="l">Events</span></div>
+          <div><span class="m">154</span><span class="l">Days</span></div>
+          <div><span class="m">1,060</span><span class="l">Trainees</span></div>
+        </div>
+        <div class="go">Open BEC Foundation</div>
+      </a>
+
+      <a href="layer-2.html" class="comp-card both">
+        <div class="top">
+          <div class="progbadge">EC + DP</div>
+          <div class="tag">Reinforcement</div>
+        </div>
+        <h3>Process &amp; Disaster TOT</h3>
+        <p>Monthly 3-day TOT alternating between Emergency Care Process and Disaster/MCM tracks. Renews specialist trainer capacity.</p>
+        <div class="meta">
+          <div><span class="m">6</span><span class="l">Events</span></div>
+          <div><span class="m">18</span><span class="l">Days</span></div>
+          <div><span class="m">120</span><span class="l">Trainees</span></div>
+        </div>
+        <div class="go">Open Process &amp; Disaster TOT</div>
+      </a>
+
+      <a href="layer-3.html" class="comp-card micro">
+        <div class="top">
+          <div class="progbadge">EC + DP</div>
+          <div class="tag">Hospital practice</div>
+        </div>
+        <h3>Hospital Microlearning</h3>
+        <p>3 cohorts × 4 hospitals × 8 weeks (C3: 7) of half-day microlearning, ending in drills (Disaster) or QI showcases (EC). Starts Week 3 after 2-week prep.</p>
+        <div class="meta">
+          <div><span class="m">92</span><span class="l">Events</span></div>
+          <div><span class="m">12</span><span class="l">Hospitals</span></div>
+          <div><span class="m">120</span><span class="l">Champions</span></div>
+        </div>
+        <div class="go">Open Hospital Microlearning</div>
+      </a>
+    </div>
+
+    <div class="comp-grid">
+      <a href="layer-4.html" class="comp-card close">
+        <div class="top">
+          <div class="progbadge">EC + DP</div>
+          <div class="tag">Closings</div>
+        </div>
+        <h3>Program Closings</h3>
+        <p>Two 1-day national flagship events — one for Emergency Care (W26), one for Disaster Preparedness (W27).</p>
+        <div class="meta">
+          <div><span class="m">2</span><span class="l">Events</span></div>
+          <div><span class="m">2</span><span class="l">Days</span></div>
+          <div><span class="m">100</span><span class="l">Attendees</span></div>
+        </div>
+        <div class="go">Open Program Closings</div>
+      </a>
+
+      <a href="combined.html" class="comp-card" style="grid-column: span 2;">
+        <div class="top">
+          <div class="tag">Planning view</div>
+          <div class="tag" style="background: var(--charcoal); color: var(--white);">All activities</div>
+        </div>
+        <h3>Master plan — all activities stacked</h3>
+        <p>The full picture: every activity from both programs, every event, every week. Filterable, with combined monthly calendar and full schedule.</p>
+        <div class="meta">
+          <div><span class="m">153</span><span class="l">Events</span></div>
+          <div><span class="m">226</span><span class="l">Days</span></div>
+          <div><span class="m">1,400</span><span class="l">Trainees</span></div>
+          <div><span class="m">932</span><span class="l">Trainer-days</span></div>
+        </div>
+        <div class="go">Open Master plan</div>
+      </a>
+    </div>
+
+    <hr class="rule" style="margin: 36px 0;">
+
+    <div class="section-label">Cross-cutting views</div>
+    <h2>See the whole program at once</h2>
+    <p class="lead">Different lenses on the same data: a real calendar for planning, a day-by-day ledger for operations.</p>
+
+    <div class="views-grid">
+      <a href="calendar.html" class="view-card">
+        <div class="icon">📅</div>
+        <div>
+          <h3>Full calendar</h3>
+          <p>Monthly calendar grid — every event placed on its actual date, color-coded by program and component.</p>
+        </div>
+      </a>
+      <a href="day-level.html" class="view-card">
+        <div class="icon">▤</div>
+        <div>
+          <h3>Day-level ledger</h3>
+          <p>One row per training day. Filter by program, entity, hospital, component, and date range.</p>
+        </div>
+      </a>
+      <a href="combined.html" class="view-card">
+        <div class="icon">⊞</div>
+        <div>
+          <h3>Master plan</h3>
+          <p>KPI rollup, layer summary, course mix, and the full schedule with filters.</p>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <footer class="footer" style="max-width:1320px;margin:0 auto;padding:14px 32px 32px;">
+    <span>Emergency Care + Disaster Preparedness Program · 2026 · WHO Country Office Egypt</span>
+    <span>v2 · Static site · Deployable</span>
+  </footer>
+
+  <script src="assets/nav.js"></script>
+</body>
+</html>

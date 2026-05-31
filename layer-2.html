@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="assets/shared.css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Layer 2 — Monthly Process / Disaster TOT</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Helvetica Neue', Arial, sans-serif; background: #F8F4ED; color: #1A1A1A; font-size: 14px; line-height: 1.5; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 28px 32px 64px; }
+  .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #C75B3C; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+  .eyebrow::before { content: ''; width: 24px; height: 2px; background: #C75B3C; }
+  h1 { font-family: Georgia, 'Times New Roman', serif; font-size: 36px; font-weight: 700; color: #2B2B2B; margin: 0 0 6px; letter-spacing: -0.5px; }
+  .lede { font-family: Georgia, serif; font-style: italic; font-size: 16px; color: #6E6E6E; max-width: 820px; }
+  hr.rule { border: 0; height: 1px; background: #D8D0C2; margin: 28px 0; }
+  .rules { background: #EFE9DD; border-left: 4px solid #C75B3C; padding: 18px 22px; margin: 24px 0 32px; }
+  .rules h3 { font-family: Georgia, serif; margin: 0 0 10px; font-size: 15px; color: #2B2B2B; text-transform: uppercase; letter-spacing: 1px; }
+  .rules ul { margin: 0; padding-left: 18px; }
+  .rules li { margin-bottom: 4px; }
+  h2 { font-family: Georgia, serif; font-size: 22px; color: #2B2B2B; margin: 0 0 16px; font-weight: 700; }
+  .section-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #C75B3C; margin-bottom: 4px; }
+
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px; }
+  .kpi { background: #FFFFFF; border: 1px solid #D8D0C2; border-top: 3px solid #4A6B4A; padding: 16px 18px; min-height: 96px; }
+  .kpi-label { font-size: 9.5px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; color: #6E6E6E; margin-bottom: 8px; }
+  .kpi-value { font-family: Georgia, serif; font-size: 28px; font-weight: 700; color: #2B2B2B; line-height: 1; }
+  .kpi-sub { font-size: 11px; color: #6E6E6E; margin-top: 6px; font-style: italic; }
+  .kpi.terra    { border-top-color: #C75B3C; }
+  .kpi.dark     { border-top-color: #96402B; }
+  .kpi.mustard  { border-top-color: #C99A3B; }
+  .kpi.purple   { border-top-color: #6F42C1; }
+
+  table.data { width: 100%; border-collapse: collapse; background: #FFFFFF; border: 1px solid #D8D0C2; font-size: 12.5px; }
+  table.data th { background: #2B2B2B; color: #FFFFFF; text-align: left; padding: 9px 12px; font-weight: 700; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.8px; }
+  table.data td { padding: 8px 12px; border-top: 1px solid #EFE9DD; }
+  table.data tr:nth-child(even) td { background: #FCFAF5; }
+  table.data td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  table.data tr.total td { background: #EFE9DD; font-weight: 700; }
+
+  .ev-badge { display: inline-block; padding: 2px 8px; border-radius: 2px; font-size: 10.5px; font-weight: 700; color: #FFFFFF; }
+  .ev-badge.ptot { background: #1F77B4; }
+  .ev-badge.dtot { background: #6F42C1; }
+
+  .twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+
+  .months { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 32px; }
+  .month-cell { background: #FFFFFF; border: 1px solid #D8D0C2; padding: 14px 12px; min-height: 132px; display: flex; flex-direction: column; }
+  .month-cell .label { font-family: Georgia, serif; font-weight: 700; color: #6E6E6E; font-size: 12px; margin-bottom: 2px; }
+  .month-cell .sub { font-size: 10.5px; color: #9A9080; margin-bottom: 10px; }
+  .month-cell .ev { margin-top: auto; padding: 10px 8px; border-radius: 2px; color: #FFFFFF; text-align: center; }
+  .month-cell .ev .t1 { font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase; font-weight: 700; opacity: 0.92; margin-bottom: 4px; }
+  .month-cell .ev .t2 { font-family: Georgia, serif; font-size: 14px; font-weight: 700; }
+  .month-cell .ev .t3 { font-size: 10.5px; opacity: 0.9; margin-top: 4px; }
+  .ev.ptot { background: #1F77B4; }
+  .ev.dtot { background: #6F42C1; }
+
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 11.5px; color: #6E6E6E; margin-bottom: 12px; }
+  .legend .swatch { display: inline-block; width: 12px; height: 12px; vertical-align: middle; margin-right: 6px; }
+
+  .layer-tag { display: inline-block; background: #2B2B2B; color: #FFFFFF; padding: 3px 10px; border-radius: 12px; font-size: 10.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+
+  .footer { border-top: 1px solid #D8D0C2; margin-top: 36px; padding-top: 14px; font-size: 11px; color: #6E6E6E; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body data-nav="tot">
+<div class="wrap">
+
+  <div class="layer-tag">Layer 02</div>
+  <div class="eyebrow">Monthly process & disaster reinforcement</div>
+  <h1>Monthly Process / Disaster TOT</h1>
+  <p class="lede">A single 3-day TOT each month, alternating between the EC Process track (P-TOT) and the Disaster / MCM track (D-TOT). Each one renews specialist trainer capacity in its domain.</p>
+
+  <div class="rules">
+    <h3>Rules of this layer</h3>
+    <ul>
+      <li><strong>Cadence</strong> — one TOT per month, alternating: <strong>EC P-TOT</strong> in odd months, <strong>Disaster/MCM TOT</strong> in even months</li>
+      <li><strong>Duration</strong> — 3 days each (Tue–Thu of Week 3, separate trainer team)</li>
+      <li><strong>Trainers</strong> — 3 Master + 2 Local (specialist team, distinct from BEC trainer pool)</li>
+      <li><strong>Trainees</strong> — 20 per TOT (drawn nationally from the 6 entities)</li>
+      <li><strong>Parallel to BEC base</strong> — runs alongside Layer 1, no conflict because trainer teams are separate</li>
+      <li><strong>Output over 6 months</strong> — 3 EC P-TOT + 3 D-TOT = 6 TOTs · 18 training days · 120 trainees</li>
+    </ul>
+  </div>
+
+  <div class="section-label">Snapshot · 6 months</div>
+  <h2>Layer 2 KPIs</h2>
+  <div class="kpi-grid">
+    <div class="kpi terra"><div class="kpi-label">EC P-TOT</div><div class="kpi-value">3</div><div class="kpi-sub">3 days each, Months 1 · 3 · 5</div></div>
+    <div class="kpi purple"><div class="kpi-label">Disaster / MCM TOT</div><div class="kpi-value">3</div><div class="kpi-sub">3 days each, Months 2 · 4 · 6</div></div>
+    <div class="kpi mustard"><div class="kpi-label">Training days</div><div class="kpi-value">18</div><div class="kpi-sub">6 events × 3 days</div></div>
+    <div class="kpi dark"><div class="kpi-label">Trainees reached</div><div class="kpi-value">120</div><div class="kpi-sub">20 per TOT · national</div></div>
+  </div>
+
+  <hr class="rule">
+
+  <div class="section-label">Six-month rhythm</div>
+  <h2>Monthly alternation</h2>
+  <div class="legend">
+    <span><span class="swatch" style="background:#1F77B4"></span>EC P-TOT (3 days)</span>
+    <span><span class="swatch" style="background:#6F42C1"></span>Disaster / MCM TOT (3 days)</span>
+  </div>
+  <div class="months" id="months"></div>
+
+  <hr class="rule">
+
+  <div class="twocol">
+    <div>
+      <div class="section-label">By track</div>
+      <h2>TOT type summary</h2>
+      <table class="data">
+        <thead><tr><th>TOT Type</th><th class="num">Events</th><th class="num">Days</th><th class="num">Trainees</th></tr></thead>
+        <tbody>
+          <tr><td><span class="ev-badge ptot">EC P-TOT</span></td><td class="num">3</td><td class="num">9</td><td class="num">60</td></tr>
+          <tr><td><span class="ev-badge dtot">Disaster / MCM TOT</span></td><td class="num">3</td><td class="num">9</td><td class="num">60</td></tr>
+          <tr class="total"><td>Total</td><td class="num">6</td><td class="num">18</td><td class="num">120</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="section-label">Trainer demand</div>
+      <h2>Trainer-day breakdown</h2>
+      <table class="data">
+        <thead><tr><th>Line item</th><th class="num">Master-days</th><th class="num">Local-days</th><th class="num">Trainer-days</th></tr></thead>
+        <tbody>
+          <tr><td>Per TOT — 3 days × (3M+2L)</td><td class="num">9</td><td class="num">6</td><td class="num">15</td></tr>
+          <tr><td>× 6 events</td><td class="num">54</td><td class="num">36</td><td class="num">90</td></tr>
+          <tr class="total"><td>Layer 2 total</td><td class="num">54</td><td class="num">36</td><td class="num">90</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <div class="section-label">Detail · all events</div>
+  <h2>Full schedule</h2>
+  <table class="data">
+    <thead>
+      <tr>
+        <th>Month</th>
+        <th>Week</th>
+        <th>Days</th>
+        <th>Dates</th>
+        <th>TOT Type</th>
+        <th>Trainers</th>
+        <th class="num">Trainer-days</th>
+        <th class="num">Trainees</th>
+      </tr>
+    </thead>
+    <tbody id="sched-tbody"></tbody>
+  </table>
+
+  <div class="footer">
+    <span>Emergency Care + Disaster Preparedness Program · Layer 2 · Monthly Process / Disaster TOT</span>
+    <span>v2 · WHO Country Office Egypt · 2026</span>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const START = new Date(Date.UTC(2026, 5, 14));
+  const MONTHS_ABBR = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+  function addDays(d, n){ const r = new Date(d); r.setUTCDate(r.getUTCDate()+n); return r; }
+  function fmt(d){ return String(d.getUTCDate()).padStart(2,'0') + '-' + MONTHS_ABBR[d.getUTCMonth()]; }
+  function weekSun(w){ return addDays(START, (w-1)*7); }
+
+  const tots = [];
+  for (let m = 1; m <= 6; m++){
+    const week = (m-1)*4 + 3;
+    const sun = weekSun(week);
+    const tue = addDays(sun, 2);
+    const thu = addDays(sun, 4);
+    const type = (m % 2 === 1) ? 'EC P-TOT' : 'Disaster / MCM TOT';
+    tots.push({month:m, week, sun, tue, thu, type});
+  }
+
+  const monthsEl = document.getElementById('months');
+  for (let m = 1; m <= 6; m++){
+    const tot = tots[m-1];
+    const isPtot = tot.type === 'EC P-TOT';
+    const cellCls = isPtot ? 'ptot' : 'dtot';
+    const cell = document.createElement('div');
+    cell.className = 'month-cell';
+    cell.innerHTML = `
+      <div class="label">Month ${m}</div>
+      <div class="sub">Week ${tot.week} · Tue–Thu</div>
+      <div class="ev ${cellCls}">
+        <div class="t1">${isPtot ? 'EC PROCESS' : 'DISASTER · MCM'}</div>
+        <div class="t2">${isPtot ? 'P-TOT' : 'D-TOT'}</div>
+        <div class="t3">${fmt(tot.tue)} – ${fmt(tot.thu)}</div>
+      </div>
+    `;
+    monthsEl.appendChild(cell);
+  }
+
+  const tbody = document.getElementById('sched-tbody');
+  tots.forEach(t => {
+    const isPtot = t.type === 'EC P-TOT';
+    const cls = isPtot ? 'ptot' : 'dtot';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>M${t.month}</td>
+      <td>W${t.week}</td>
+      <td>3</td>
+      <td>${fmt(t.tue)} – ${fmt(t.thu)} (Tue–Thu)</td>
+      <td><span class="ev-badge ${cls}">${t.type}</span></td>
+      <td>3M + 2L</td>
+      <td class="num">15</td>
+      <td class="num">20</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+})();
+</script>
+<script src="assets/nav.js"></script>
+</body>
+</html>
