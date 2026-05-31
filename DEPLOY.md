@@ -3,169 +3,112 @@
 **Domain:** `timeline.endura-assess.com`
 **Repo:** `https://github.com/soroura/timeline.git`
 **VPS:** `217.76.56.188`
-**Stack:** Cloudflare DNS (proxied) → Nginx Proxy Manager (NPM UI) → Docker `nginx:alpine` container serving the static files
+**Stack:** Cloudflare DNS (proxied) → Nginx Proxy Manager (NPM UI) → Docker `nginx:alpine` container on port `8095`
 
 ---
 
-## What's already done ✅
+## Already done ✅
 
-- DNS record `timeline.endura-assess.com → 217.76.56.188` (Proxied via Cloudflare orange cloud)
-- VPS has Nginx Proxy Manager running with UI at `addresses.ahmedsorour.com/nginx/proxy`
-- Docker is running on the VPS
-- Cloudflare account active (you've used Origin Certificates before)
-
-## What we'll do now 🚀
-
-1. Push the site to GitHub
-2. Clone to VPS and run a tiny Docker container that serves the files on port `8090`
-3. Add a Proxy Host in NPM UI → forwards `timeline.endura-assess.com` to `<VPS-IP>:8090`
-4. SSL via Cloudflare Origin Certificate (15-year cert, generated in Cloudflare, installed in NPM)
-5. Set Cloudflare SSL mode to `Full (strict)` so the proxied connection is fully encrypted
+- DNS record `timeline.endura-assess.com → 217.76.56.188` (Cloudflare proxied)
+- VPS has Nginx Proxy Manager UI at `addresses.ahmedsorour.com/nginx/proxy`
+- Docker is running
+- Cloudflare wildcard cert exists for `*.endura-assess.com` (reusable for this subdomain)
 
 ---
 
-## Step 1 — Push to GitHub (laptop, one-time)
+## Step 1 — Push to GitHub (laptop)
 
 ```bash
 cd "/Users/soroura/Library/CloudStorage/OneDrive-WorldHealthOrganization/a-who26/work-plan/ec-dp-timeline"
-
-# If git not initialised yet:
-git init && git branch -M main
-git remote add origin https://github.com/soroura/timeline.git
-
-git add .
-git commit -m "Initial: EC + DP Timeline 2026"
-git push -u origin main
+git add . && git commit -m "Site for deployment" && git push
 ```
 
-GitHub auth → use a **Personal Access Token** (Settings → Developer settings → Personal access tokens → Tokens classic, scope `repo`).
-
-For future updates:
-```bash
-git add . && git commit -m "..." && git push
-```
+(First-time: `git init && git branch -M main && git remote add origin https://github.com/soroura/timeline.git && git add . && git commit -m "Initial" && git push -u origin main`. Auth: Personal Access Token.)
 
 ---
 
-## Step 2 — Clone on VPS and run the container
+## Step 2 — On the VPS: clone + start container
 
-SSH into the VPS:
 ```bash
-ssh root@217.76.56.188      # or your-user@217.76.56.188
-```
+ssh root@217.76.56.188
 
-Clone repo to a clean folder:
-```bash
-mkdir -p /opt/timeline
 cd /opt
 git clone https://github.com/soroura/timeline.git
 cd timeline
-```
-
-Start the container (it reads `docker-compose.yml` from the repo):
-```bash
 docker compose up -d
-```
 
-Verify:
-```bash
+# Verify
 docker ps | grep timeline-site
-curl -I http://localhost:8090/      # should return HTTP/1.1 200 OK
-curl -I http://217.76.56.188:8090/  # same from outside (if firewall allows)
+curl -I http://localhost:8095/      # → HTTP/1.1 200 OK
 ```
 
-If port `8090` is already taken on the VPS, edit `docker-compose.yml` (change `8090:80` to another free port like `8765:80`, `8091:80`, etc.) and `docker compose up -d` again.
+If port `8095` is taken, edit `docker-compose.yml` (change `8095:80`) and `docker compose up -d` again.
 
 ---
 
-## Step 3 — Add a Proxy Host in NPM UI
+## Step 3 — NPM UI: add the Proxy Host
 
-Open **`https://addresses.ahmedsorour.com/nginx/proxy`** in your browser → log in.
-
-Click **`Add Proxy Host`** (top right).
+Open **`https://addresses.ahmedsorour.com/nginx/proxy`** → **Add Proxy Host**
 
 ### Details tab
 
 | Field | Value |
 |---|---|
-| **Domain Names** | `timeline.endura-assess.com` (press Enter to add) |
-| **Scheme** | `http` |
-| **Forward Hostname / IP** | `217.76.56.188` |
-| **Forward Port** | `8090` |
-| **Cache Assets** | ✅ ON |
-| **Block Common Exploits** | ✅ ON |
-| **Websockets Support** | ⬜ OFF (not needed for static site) |
+| Domain Names | `timeline.endura-assess.com` |
+| Scheme | `http` |
+| Forward Hostname / IP | `217.76.56.188` |
+| Forward Port | `8095` |
+| Cache Assets | ✅ |
+| Block Common Exploits | ✅ |
+| Websockets Support | ⬜ |
 
-Click **Save** (don't enable SSL yet — we do it in Step 4).
+**Save.**
 
-### Verify HTTP works first
-
-Open in browser: **`http://timeline.endura-assess.com`**
-
-(May need to use a private/incognito tab to bypass HTTPS auto-upgrade. You should see the site loading over HTTP. If you get a 502 or 504, check `docker ps`, `curl http://217.76.56.188:8090/`, and NPM logs.)
+Quick test (incognito tab to avoid HTTPS auto-upgrade): `http://timeline.endura-assess.com` → site should appear.
 
 ---
 
-## Step 4 — SSL via Cloudflare Origin Certificate
+## Step 4 — Skip if you have a Cloudflare Origin cert ✋
 
-This gives you a 15-year cert. Free. Works perfectly with Cloudflare proxied DNS.
+If you already have a `*.endura-assess.com` cert in NPM (or elsewhere), **skip ahead to Step 5**.
 
-### Part A — Generate the cert in Cloudflare
+### Step 4 — Only if you need a NEW cert
 
-1. Log into Cloudflare → select **endura-assess.com** zone
-2. Left sidebar → **SSL/TLS** → **Origin Server**
-3. Click **`Create Certificate`**
-4. **Hostnames covered**: keep the defaults (`*.endura-assess.com` and `endura-assess.com`) — this single cert will cover any subdomain (timeline, disaster, www, etc.)
-5. **Key type**: RSA (2048)
-6. **Certificate Validity**: 15 years
-7. Click **Create**
-8. Two text boxes appear:
-   - **Origin Certificate** (PEM) — copy this
-   - **Private Key** (PEM) — copy this
-9. **Keep this tab open** — Cloudflare doesn't show the private key again after you leave
+1. Cloudflare → **endura-assess.com** → **SSL/TLS** → **Origin Server** → **Create Certificate**
+2. Hostnames: defaults (`*.endura-assess.com, endura-assess.com`)
+3. RSA, 15 years → **Create**
+4. Copy the **Certificate** and **Private Key** (key shown ONCE)
+5. NPM UI → **SSL Certificates** → **Add Custom**
+   - Name: `Cloudflare Origin — *.endura-assess.com`
+   - Paste certificate + private key
+   - **Save**
 
-### Part B — Add the cert in NPM
+---
 
-1. NPM UI → top menu **`SSL Certificates`**
-2. Click **`Add SSL Certificate`** → **`Custom`**
-3. Fill in:
-   - **Name**: `Cloudflare Origin — *.endura-assess.com`
-   - **Certificate Key**: paste the **Private Key** from Cloudflare
-   - **Certificate**: paste the **Origin Certificate** from Cloudflare
-   - **Intermediate Certificate**: leave blank
-4. Click **Save**
+## Step 5 — Attach the cert to the Proxy Host
 
-### Part C — Attach the cert to the Proxy Host
-
-1. NPM UI → **`Hosts`** → **`Proxy Hosts`**
-2. Find `timeline.endura-assess.com` → click **⋮** → **Edit**
-3. Go to the **SSL** tab
-4. **SSL Certificate**: select `Cloudflare Origin — *.endura-assess.com` from the dropdown
-5. Toggles:
+1. NPM UI → **Hosts** → **Proxy Hosts** → edit `timeline.endura-assess.com`
+2. **SSL** tab
+3. **SSL Certificate** dropdown → select your existing `*.endura-assess.com` cert
+4. Toggles:
    - ✅ **Force SSL**
    - ✅ **HTTP/2 Support**
    - ✅ **HSTS Enabled**
-   - ⬜ HSTS Subdomains (only if you want this enforced on all subdomains)
-6. Click **Save**
-
-### Part D — Set Cloudflare encryption mode
-
-Back in Cloudflare → endura-assess.com → **SSL/TLS** → **Overview**:
-- Encryption mode: **Full (strict)** ← important! Cloudflare will verify the Origin Cert you just installed.
-
-If it's currently on `Flexible`, switching to `Full (strict)` makes the end-to-end connection encrypted.
+5. **Save**
 
 ---
 
-## Step 5 — Verify
+## Step 6 — Confirm Cloudflare SSL mode
 
-Open **`https://timeline.endura-assess.com`** in a fresh browser tab.
+Cloudflare → **endura-assess.com** → **SSL/TLS** → **Overview**
 
-- 🟢 You should see the site with the padlock icon
-- Click the padlock → should show Cloudflare as the certificate issuer (because Cloudflare proxy is in front)
-- All pages, nav, and assets should load correctly
+Encryption mode should be **Full (strict)**. It almost certainly already is (your other endura-assess sites use it).
 
-Test the routes:
+---
+
+## Step 7 — Test
+
+Open **`https://timeline.endura-assess.com`** → padlock visible, every page loads:
 - `/` (home)
 - `/concept.html`
 - `/calendar.html`
@@ -175,25 +118,22 @@ Test the routes:
 
 ---
 
-## Step 6 — Future updates
-
-Whenever you change a page:
+## Future updates
 
 **Laptop:**
 ```bash
 cd "/Users/soroura/Library/CloudStorage/OneDrive-WorldHealthOrganization/a-who26/work-plan/ec-dp-timeline"
-git add . && git commit -m "Update content" && git push
+git add . && git commit -m "..." && git push
 ```
 
 **VPS:**
 ```bash
 cd /opt/timeline && git pull
-# Container picks up changes immediately (read-only volume mount)
-# Cloudflare cache may take a few minutes; you can purge manually:
-#   Cloudflare → endura-assess.com → Caching → Configuration → Purge Everything
 ```
 
-### Optional — auto-pull every 5 min
+Container picks up changes immediately (read-only volume mount). If Cloudflare shows stale → CF Dashboard → Caching → **Purge Everything**.
+
+### Optional auto-pull
 
 ```bash
 cat > /usr/local/bin/timeline-update.sh <<'EOF'
@@ -201,7 +141,6 @@ cat > /usr/local/bin/timeline-update.sh <<'EOF'
 cd /opt/timeline && git pull --quiet
 EOF
 chmod +x /usr/local/bin/timeline-update.sh
-
 (crontab -l 2>/dev/null; echo "*/5 * * * * /usr/local/bin/timeline-update.sh") | crontab -
 ```
 
@@ -209,31 +148,22 @@ chmod +x /usr/local/bin/timeline-update.sh
 
 ## Rollback
 
-To take the site down without removing it:
-- NPM UI → Hosts → Proxy Hosts → toggle the **Enabled** switch off
-- Or `docker compose down` in `/opt/timeline`
-
-To remove completely:
-```bash
-cd /opt/timeline
-docker compose down
-cd /opt && rm -rf timeline
-# NPM UI: delete the proxy host + (optionally) the SSL certificate
-```
+- Pause site: NPM UI → toggle Proxy Host **Enabled** off
+- Stop container: `cd /opt/timeline && docker compose down`
+- Remove entirely: `docker compose down && cd /opt && rm -rf timeline` + delete proxy host in NPM
 
 ---
 
 ## Troubleshooting
 
-| Symptom | Cause | Fix |
-|---|---|---|
-| NPM says 502 Bad Gateway | Container not running or wrong port | `docker ps`, `docker compose logs`, verify port `8090` |
-| `curl http://217.76.56.188:8090` works but NPM 502 | VPS firewall blocks intra-host requests | NPM is on same host — should work; double-check IP in NPM Forward field |
-| Cloudflare error 521 | VPS not reachable on origin port | Check `curl -I http://217.76.56.188` (NPM handles port 80) |
-| Cloudflare error 525 / SSL handshake failed | SSL mode is "Full (strict)" but NPM cert mismatch | Re-check the Origin Cert was pasted correctly; or switch CF to "Full" temporarily |
-| Browser shows old version after push | Cloudflare cache | Purge in CF dashboard (Caching → Purge Everything) or hard-refresh |
-| Want to add another subdomain later | Same Origin Cert works for ALL `*.endura-assess.com` | Just add new Proxy Host in NPM and select the same cert |
+| Symptom | Fix |
+|---|---|
+| NPM 502 Bad Gateway | `docker ps`; `curl http://localhost:8095/`; verify port in NPM matches docker-compose |
+| Cloudflare 521 | VPS not reachable; check NPM is running, container on right port |
+| Cloudflare 525 (SSL handshake) | Wrong cert attached, or CF mode mismatch; switch CF to "Full" temporarily, fix, then back to "Full (strict)" |
+| Browser shows old version | CF cache: purge in dashboard, or hard-refresh |
+| New subdomain later | Same Origin Cert covers all `*.endura-assess.com` — just add new Proxy Host and select the same cert |
 
 ---
 
-**Done. Site at https://timeline.endura-assess.com — fully encrypted, served via your existing NPM + Cloudflare stack.**
+**Done. Site at https://timeline.endura-assess.com — fully encrypted, via your existing NPM + Cloudflare stack.**
